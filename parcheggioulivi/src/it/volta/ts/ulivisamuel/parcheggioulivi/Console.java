@@ -29,7 +29,7 @@ public class Console
 	
 	private void menu()
 	{
-		String  menu     = "\nMenu\n   1.Visualizza lo stato di ogni parcheggio\n   0.Esci";
+		String  menu     = "\nMenu\n   1.Visualizza lo stato di ogni piazzola\n   0.Esci";
 		int     scelta   = 0;
 		boolean continua = true;
 		
@@ -57,23 +57,27 @@ public class Console
 	
 	private void statoParcheggio()
 	{
-		System.out.println();
-		statoPianoA();
-		statoPianoAScooter();
-		statoPianoB();
-		statoPianoBRicarica();
-		statoPianoC();
+		System.out.print("\nPiano A - Piazzole affittabili per auto\n");
+		statoPiano("..\\parcheggioulivi\\pianoA.csv");
+		System.out.print("\nPiano A - Piazzole ordinarie per scooter\n");
+		statoPiano("..\\parcheggioulivi\\pianoAScooter.csv");
+		System.out.print("\nPiano B - Piazzole ordinarie per auto\n");
+		statoPiano("..\\parcheggioulivi\\pianoB.csv");
+		System.out.print("\nPiano B - Piazzole con ricarica per auto elettriche\n");
+		statoPiano("..\\parcheggioulivi\\pianoBRicarica.csv");
+		System.out.print("\nPiano C - Piazzole ordinarie per auto\n");
+		statoPiano("..\\parcheggioulivi\\pianoC.csv");
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void statoPianoA()
+	private void statoPiano(String percorso)
 	{
-		System.out.println("Piano A - Piazzole auto affittabili\n");
+		System.out.println();
 		
 		try 
 		{
-			List<String[]> mess = bizDataBase.listaPianoA();
+			List<String[]> mess = bizDataBase.listaPiano(percorso);
 			
 			for(String[] riga : mess)
 			{
@@ -86,107 +90,5 @@ public class Console
 		{
 			e.printStackTrace();
 		}
-		
-		System.out.println();
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
-	private void statoPianoAScooter()
-	{
-		System.out.println("Piano A - Piazzole scooter affittabili\n");
-		
-		try 
-		{
-			List<String[]> mess = bizDataBase.listaPianoAScooter();
-			
-			for(String[] riga : mess)
-			{
-				for(String campo : riga)
-					System.out.printf("%-20s", campo);
-				System.out.println();
-			}
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		
-		System.out.println();
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
-	private void statoPianoB()
-	{
-		System.out.println("Piano B - Piazzole auto ordinarie\n");
-		
-		try 
-		{
-			List<String[]> mess = bizDataBase.listaPianoB();
-			
-			for(String[] riga : mess)
-			{
-				for(String campo : riga)
-					System.out.printf("%-20s", campo);
-				System.out.println();
-			}
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		
-		System.out.println();
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
-	private void statoPianoBRicarica()
-	{
-		System.out.println("Piano B - Piazzole auto elettriche con ricarica\n");
-		
-		try 
-		{
-			List<String[]> mess = bizDataBase.listaPianoB();
-			
-			for(String[] riga : mess)
-			{
-				for(String campo : riga)
-					System.out.printf("%-20s", campo);
-				System.out.println();
-			}
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		
-		System.out.println();
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
-	private void statoPianoC()
-	{
-		System.out.println("Piano C - Piazzole auto ordinarie\n");
-		
-		try 
-		{
-			List<String[]> mess = bizDataBase.listaPianoC();
-			
-			for(String[] riga : mess)
-			{
-				for(String campo : riga)
-					System.out.printf("%-20s", campo);
-				System.out.println();
-			}
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		
-		System.out.println();
 	}
 }
