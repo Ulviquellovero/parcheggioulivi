@@ -29,18 +29,24 @@ public class Console
 	
 	private void menu()
 	{
-		String  menu     = "\nMenu\n   1.Visualizza lo stato di ogni piazzola\n   0.Esci";
+		String  menu     = "\nMenu\n   1.Visualizza lo stato di ogni piazzola\n   2.Visualizza lo stato delle piazzole libere"
+				         + "\n   0.Esci";
+		
 		int     scelta   = 0;
 		boolean continua = true;
 		
 		while(continua)
 		{
-			scelta = Util.leggiInt(scanner, menu, 0, 1, false, -1);
+			scelta = Util.leggiInt(scanner, menu, 0, 2, false, -1);
 			
 			switch(scelta)
 			{
 			case 1:
 				statoParcheggio();
+				break;
+				
+			case 2:
+				statoParcheggiLiberi();
 				break;
 				
 			case -1:
@@ -71,6 +77,22 @@ public class Console
 	
 	//---------------------------------------------------------------------------------------------
 	
+	private void statoParcheggiLiberi()
+	{
+		System.out.print("\nPiano A - Piazzole affittabili per auto\n");
+		statoPiano("..\\parcheggioulivi\\pianoA.csv");
+		System.out.print("\nPiano A - Piazzole ordinarie per scooter\n");
+		statoPiano("..\\parcheggioulivi\\pianoAScooter.csv");
+		System.out.print("\nPiano B - Piazzole ordinarie per auto\n");
+		statoPiano("..\\parcheggioulivi\\pianoB.csv");
+		System.out.print("\nPiano B - Piazzole con ricarica per auto elettriche\n");
+		statoPiano("..\\parcheggioulivi\\pianoBRicarica.csv");
+		System.out.print("\nPiano C - Piazzole ordinarie per auto\n");
+		statoPiano("..\\parcheggioulivi\\pianoC.csv");
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
 	private void statoPiano(String percorso)
 	{
 		System.out.println();
@@ -83,6 +105,34 @@ public class Console
 			{
 				for(String campo : riga)
 					System.out.printf("%-20s", campo);
+				System.out.println();
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void statoPianoParcheggiLiberi(String percorso)
+	{
+		System.out.println();
+		
+		try 
+		{
+			List<String[]> mess = bizDataBase.listaPiano(percorso);
+			
+			for(String[] riga : mess)
+			{
+				for(int idx = 0; idx < riga.length; ++idx)
+				{
+					if(idx == 0 && riga[1] == "NO")
+						break;
+					
+					System.out.printf("%-20s", riga[idx]);
+				}
 				System.out.println();
 			}
 		} 
