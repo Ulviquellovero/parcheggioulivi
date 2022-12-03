@@ -80,15 +80,15 @@ public class Console
 	private void statoParcheggiLiberi()
 	{
 		System.out.print("\nPiano A - Piazzole affittabili per auto\n");
-		statoPiano("..\\parcheggioulivi\\pianoA.csv");
+		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoA.csv");
 		System.out.print("\nPiano A - Piazzole ordinarie per scooter\n");
-		statoPiano("..\\parcheggioulivi\\pianoAScooter.csv");
+		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoAScooter.csv");
 		System.out.print("\nPiano B - Piazzole ordinarie per auto\n");
-		statoPiano("..\\parcheggioulivi\\pianoB.csv");
+		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoB.csv");
 		System.out.print("\nPiano B - Piazzole con ricarica per auto elettriche\n");
-		statoPiano("..\\parcheggioulivi\\pianoBRicarica.csv");
+		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoBRicarica.csv");
 		System.out.print("\nPiano C - Piazzole ordinarie per auto\n");
-		statoPiano("..\\parcheggioulivi\\pianoC.csv");
+		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoC.csv");
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -128,12 +128,13 @@ public class Console
 			{
 				for(int idx = 0; idx < riga.length; ++idx)
 				{
-					if(idx == 0 && riga[1] == "NO")
+					if(!riga[1].equals("NO") && !riga[1].equals("Occupato"))
 						break;
 					
 					System.out.printf("%-20s", riga[idx]);
 				}
-				System.out.println();
+				if(!riga[1].equals("SI"))
+					System.out.println();
 			}
 		} 
 		catch (Exception e) 

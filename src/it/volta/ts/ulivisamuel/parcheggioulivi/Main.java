@@ -11,6 +11,7 @@ public class Main
 	 *    - mettere apposto sezioni file
 	 *    - mettere apposto interfaccia
 	 *    - mettere apposto continuo ==> quando sbaglio inserimento
+	 *    - cambia numero park scooter
 	 */
 	
 	public static void main(String[] args) 
