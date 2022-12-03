@@ -96,17 +96,10 @@ public class Console
 	private void statoPiano(String percorso)
 	{
 		System.out.println();
-		
 		try 
 		{
 			List<String[]> mess = bizDataBase.listaPiano(percorso);
-			
-			for(String[] riga : mess)
-			{
-				for(String campo : riga)
-					System.out.printf("%-20s", campo);
-				System.out.println();
-			}
+			visualizzaLista(mess);
 		} 
 		catch (Exception e) 
 		{
@@ -119,27 +112,26 @@ public class Console
 	private void statoPianoParcheggiLiberi(String percorso)
 	{
 		System.out.println();
-		
 		try 
 		{
-			List<String[]> mess = bizDataBase.listaPiano(percorso);
-			
-			for(String[] riga : mess)
-			{
-				for(int idx = 0; idx < riga.length; ++idx)
-				{
-					if(!riga[1].equals("NO") && !riga[1].equals("Occupato"))
-						break;
-					
-					System.out.printf("%-20s", riga[idx]);
-				}
-				if(!riga[1].equals("SI"))
-					System.out.println();
-			}
+			List<String[]> mess = bizDataBase.listaPianoPiazzoleLibere(percorso);
+			visualizzaLista(mess);
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void visualizzaLista(List<String[]> mess)
+	{
+		for(String[] riga : mess)
+		{
+			for(String campo : riga)
+				System.out.printf("%-20s", campo);
+			System.out.println();
 		}
 	}
 }
