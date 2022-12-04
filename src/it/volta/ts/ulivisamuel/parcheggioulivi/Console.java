@@ -33,15 +33,16 @@ public class Console
 	
 	private void menu()
 	{
-		String  menu     = "\nMenu\n   1.Visualizza lo stato di ogni piazzola\n   2.Visualizza lo stato delle piazzole libere"
-				         + "\n   0.Esci";
+		String  menu     = "\nInserisci il valore indicato per:\n   1.Visualizzare lo stato di ogni piazzola"
+						 + "\n   2.Visualizzare lo stato delle piazzole libere\n   3.Visualizzare lo stato delle piazzole affifabili"
+						 + "\n   0.Esci";
 		
 		int     scelta   = 0;
 		boolean continua = true;
 		
 		while(continua)
 		{
-			scelta = Util.leggiInt(scanner, menu, 0, 2, false, -1);
+			scelta = Util.leggiInt(scanner, menu, 0, 3, false, -1);
 			
 			switch(scelta)
 			{
@@ -51,6 +52,10 @@ public class Console
 				
 			case 2:
 				statoParcheggiLiberi();
+				break;
+				
+			case 3:
+				statoPianoAAuto(true);
 				break;
 				
 			case -1:
