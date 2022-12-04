@@ -15,7 +15,7 @@ import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.SiNo;
 
 public class BizDataBase
 {
-	public List<PiazzolaAutoAffittabile> listaPiazzoleAffittabili()
+	public List<PiazzolaAutoAffittabile> listaPiazzoleAffittabili(boolean soloLibere)
 	{
 		BufferedReader                reader = null;
 		String                        riga   = "";
@@ -25,13 +25,16 @@ public class BizDataBase
 			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoA.csv"));
 			while((riga = reader.readLine()) != null) 
 			{
-				String[]                campi    = riga.split(",");
-				PiazzolaAutoAffittabile piazzola = new PiazzolaAutoAffittabile(0, null, null, null);
-				piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
-				piazzola.setOccupato(SiNo.valueOf(campi[1]));
-				piazzola.setAuto(new Auto(campi[2], Motore.values()[0]));
-				piazzola.setAffittato(SiNo.valueOf(campi[3]));
-				mess.add(piazzola);
+				String[] campi = riga.split(",");
+				if(soloLibere)
+				{
+					if(!campi[1].equals("SI"))
+						aggiungiPiazzolaAffittabile(campi, mess);
+				}
+				else
+				{
+					aggiungiPiazzolaAffittabile(campi, mess);
+				}
 			}
 		}
 		catch(Exception e) 
@@ -47,22 +50,38 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public List<PiazzolaScooter> listaPiazzoleScooter()
+	private void aggiungiPiazzolaAffittabile(String[] campi, List<PiazzolaAutoAffittabile> mess)
 	{
-		BufferedReader            reader = null;
-		String                    riga   = "";
-		List<PiazzolaScooter>     mess   = new ArrayList<PiazzolaScooter>();
+		PiazzolaAutoAffittabile piazzola = new PiazzolaAutoAffittabile(0, null, null, null);
+		piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
+		piazzola.setOccupato(SiNo.valueOf(campi[1]));
+		piazzola.setAuto(new Auto(campi[2], Motore.values()[0]));
+		piazzola.setAffittato(SiNo.valueOf(campi[3]));
+		mess.add(piazzola);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public List<PiazzolaScooter> listaPiazzoleScooter(boolean soloLibere)
+	{
+		BufferedReader        reader = null;
+		String                riga   = "";
+		List<PiazzolaScooter> mess   = new ArrayList<PiazzolaScooter>();
 		try
 		{
 			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoAScooter.csv"));
 			while((riga = reader.readLine()) != null) 
 			{
-				String[]            campi    = riga.split(",");
-				PiazzolaScooter     piazzola = new PiazzolaScooter(0, null, null);
-				piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
-				piazzola.setOccupato(SiNo.valueOf(campi[1]));
-				piazzola.setScooter(new Scooter(campi[2]));
-				mess.add(piazzola);
+				String[] campi = riga.split(",");
+				if(soloLibere)
+				{
+					if(!campi[1].equals("SI"))
+						aggiungiPiazzolaScooter(campi, mess);
+				}
+				else
+				{
+					aggiungiPiazzolaScooter(campi, mess);
+				}
 			}
 		}
 		catch(Exception e) 
@@ -78,22 +97,37 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public List<PiazzolaAuto> listaPiazzoleRicarica()
+	private void aggiungiPiazzolaScooter(String[] campi, List<PiazzolaScooter> mess)
 	{
-		BufferedReader            reader = null;
-		String                    riga   = "";
-		List<PiazzolaAuto>        mess   = new ArrayList<PiazzolaAuto>();
+		PiazzolaScooter     piazzola = new PiazzolaScooter(0, null, null);
+		piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
+		piazzola.setOccupato(SiNo.valueOf(campi[1]));
+		piazzola.setScooter(new Scooter(campi[2]));
+		mess.add(piazzola);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public List<PiazzolaAuto> listaPiazzoleRicarica(boolean soloLibere)
+	{
+		BufferedReader     reader = null;
+		String             riga   = "";
+		List<PiazzolaAuto> mess = new ArrayList<PiazzolaAuto>();
 		try
 		{
 			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoBRicarica.csv"));
 			while((riga = reader.readLine()) != null) 
 			{
-				String[]     campi    = riga.split(",");
-				PiazzolaAuto piazzola = new PiazzolaAuto(0, null, null);
-				piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
-				piazzola.setOccupato(SiNo.valueOf(campi[1]));
-				piazzola.setAuto(new Auto(campi[2], Motore.values()[0]));
-				mess.add(piazzola);
+				String[] campi = riga.split(",");
+				if(soloLibere)
+				{
+					if(!campi[1].equals("SI"))
+						aggiungiPiazzolaRicarica(campi, mess);
+				}
+				else
+				{
+					aggiungiPiazzolaRicarica(campi, mess);
+				}
 			}
 		}
 		catch(Exception e) 
@@ -109,11 +143,22 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public List<PiazzolaAuto> listaPiazzoleOrdinarie(boolean pianoB)
+	private void aggiungiPiazzolaRicarica(String[] campi, List<PiazzolaAuto> mess)
 	{
-		BufferedReader            reader = null;
-		String                    riga   = "";
-		List<PiazzolaAuto>        mess   = new ArrayList<PiazzolaAuto>();
+		PiazzolaAuto piazzola = new PiazzolaAuto(0, null, null);
+		piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
+		piazzola.setOccupato(SiNo.valueOf(campi[1]));
+		piazzola.setAuto(new Auto(campi[2], Motore.values()[0]));
+		mess.add(piazzola);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public List<PiazzolaAuto> listaPiazzoleOrdinarie(boolean pianoB, boolean soloLibere)
+	{
+		BufferedReader     reader = null;
+		String             riga   = "";
+		List<PiazzolaAuto> mess   = new ArrayList<PiazzolaAuto>();
 		try
 		{
 			if(pianoB)
@@ -123,12 +168,16 @@ public class BizDataBase
 				
 			while((riga = reader.readLine()) != null) 
 			{
-				String[]     campi    = riga.split(",");
-				PiazzolaAuto piazzola = new PiazzolaAuto(0, null, null);
-				piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
-				piazzola.setOccupato(SiNo.valueOf(campi[1]));
-				piazzola.setAuto(new Auto(campi[2], Motore.values()[0]));
-				mess.add(piazzola);
+				String[] campi = riga.split(",");
+				if(soloLibere)
+				{
+					if(!campi[1].equals("SI"))
+						aggiungiPiazzolaOrdinaria(campi, mess);
+				}
+				else
+				{
+					aggiungiPiazzolaOrdinaria(campi, mess);
+				}
 			}
 		}
 		catch(Exception e) 
@@ -140,6 +189,17 @@ public class BizDataBase
 			chiudiFile(reader);
 		}
 		return mess;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void aggiungiPiazzolaOrdinaria(String[] campi, List<PiazzolaAuto> mess)
+	{
+		PiazzolaAuto piazzola = new PiazzolaAuto(0, null, null);
+		piazzola.setNumeroParcheggio(Integer.parseInt(campi[0]));
+		piazzola.setOccupato(SiNo.valueOf(campi[1]));
+		piazzola.setAuto(new Auto(campi[2], Motore.values()[0]));
+		mess.add(piazzola);
 	}
 	
 	//---------------------------------------------------------------------------------------------

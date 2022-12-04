@@ -15,6 +15,9 @@ public class Main
 	 *    - cambia numero park scooter
 	 *    - cambia motore classe auto
 	 *    - migliora output
+	 *    - aggiungi commenti
+	 *    - aggiungi che se non ci sono posti liberi visualizza nessun posto libero
+	 *    - togli 00 prima di 00100 o 0010
 	 */
 	
 	public static void main(String[] args) 

@@ -67,75 +67,75 @@ public class Console
 	
 	private void statoParcheggio()
 	{
-		statoPianoAAuto();
-		statoPianoAScooter();
-		statoPianoB();
-		statoPianoBRcarica();
-		statoPianoC();
+		statoPianoAAuto(false);
+		statoPianoAScooter(false);
+		statoPianoB(false);
+		statoPianoBRcarica(false);
+		statoPianoC(false);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
 	private void statoParcheggiLiberi()
 	{
-		/*System.out.print("\nPiano A - Piazzole affittabili per auto\n");
-		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoA.csv");
-		System.out.print("\nPiano A - Piazzole ordinarie per scooter\n");
-		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoAScooter.csv");
-		System.out.print("\nPiano B - Piazzole ordinarie per auto\n");
-		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoB.csv");
-		System.out.print("\nPiano B - Piazzole con ricarica per auto elettriche\n");
-		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoBRicarica.csv");
-		System.out.print("\nPiano C - Piazzole ordinarie per auto\n");
-		statoPianoParcheggiLiberi("..\\parcheggioulivi\\pianoC.csv");*/
+		statoPianoAAuto(true);
+		statoPianoAScooter(true);
+		statoPianoB(true);
+		statoPianoBRcarica(true);
+		statoPianoC(true);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void statoPianoAAuto()
+	private void statoPianoAAuto(boolean soloLibere)
 	{
-		System.out.println("\nPiano A - Piazzole affittabili per auto\n");
-		List<PiazzolaAutoAffittabile> mess = bizDataBase.listaPiazzoleAffittabili();
+		System.out.println(soloLibere ? "\nPiano A - Piazzole affittabili libere per auto\n" 
+						              : "\nPiano A - Piazzole affittabili per auto\n");
+		List<PiazzolaAutoAffittabile> mess = bizDataBase.listaPiazzoleAffittabili(soloLibere);
 		for(PiazzolaAutoAffittabile piazzola : mess)
 			System.out.println(piazzola);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void statoPianoAScooter()
+	private void statoPianoAScooter(boolean soloLibere)
 	{
-		System.out.println("\nPiano A - Piazzole ordinarie per scooter\n");
-		List<PiazzolaScooter> mess = bizDataBase.listaPiazzoleScooter();
+		System.out.println(soloLibere ? "\nPiano A - Piazzole ordinarie libere per scooter\n"
+						     		  : "\nPiano A - Piazzole ordinarie per scooter\n");
+		List<PiazzolaScooter> mess = bizDataBase.listaPiazzoleScooter(soloLibere);
 		for(PiazzolaScooter piazzola : mess)
 			System.out.println(piazzola);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void statoPianoB()
+	private void statoPianoB(boolean soloLibere)
 	{
-		System.out.println("\nPiano B - Piazzole ordinarie per auto\n");
-		List<PiazzolaAuto> mess = bizDataBase.listaPiazzoleOrdinarie(true);
+		System.out.println(soloLibere ? "\nPiano B - Piazzole ordinarie libere per auto\n"
+								      : "\nPiano B - Piazzole ordinarie per auto\n");
+		List<PiazzolaAuto> mess = bizDataBase.listaPiazzoleOrdinarie(true, soloLibere);
 		for(PiazzolaAuto piazzola : mess)
 			System.out.println(piazzola);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void statoPianoBRcarica()
+	private void statoPianoBRcarica(boolean soloLibere)
 	{
-		System.out.println("\nPiano B - Piazzole con ricarica per auto elettriche\n");
-		List<PiazzolaAuto> mess = bizDataBase.listaPiazzoleRicarica();
+		System.out.println(soloLibere ? "\nPiano B - Piazzole con ricarica libere per auto elettriche\n"
+									  : "\nPiano B - Piazzole con ricarica per auto elettriche\n");
+		List<PiazzolaAuto> mess = bizDataBase.listaPiazzoleRicarica(soloLibere);
 		for(PiazzolaAuto piazzola : mess)
 			System.out.println(piazzola);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void statoPianoC()
+	private void statoPianoC(boolean soloLibere)
 	{
-		System.out.println("\nPiano C - Piazzole ordinarie per auto\n");
-		List<PiazzolaAuto> mess = bizDataBase.listaPiazzoleOrdinarie(false);
+		System.out.println(soloLibere ? "\nPiano C - Piazzole ordinarie libere per auto\n"
+									  : "\nPiano C - Piazzole ordinarie per auto\n");
+		List<PiazzolaAuto> mess = bizDataBase.listaPiazzoleOrdinarie(false, soloLibere);
 		for(PiazzolaAuto piazzola : mess)
 			System.out.println(piazzola);
 	}
