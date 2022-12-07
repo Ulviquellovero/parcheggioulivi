@@ -34,4 +34,10 @@ public class PiazzolaScooter extends Piazzola
 		return "PiazzolaScooter [numeroParcheggio=" + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
 		       + ", Targa=" + scooter.getTarga() + "]";
 	}
+	
+	@Override
+	public String toCsvFormat() 
+	{
+		return super.toCsvFormat() + "," + scooter.getTarga();
+	}
 }

@@ -33,4 +33,12 @@ public class PiazzolaAuto extends Piazzola
 		return "PiazzolaAuto [numeroParcheggio=" + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
 		       + ", Targa=" + auto.getTarga() + "]";
 	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	@Override
+	public String toCsvFormat()
+	{
+		return super.toCsvFormat() + "," + auto.getTarga();
+	}
 }

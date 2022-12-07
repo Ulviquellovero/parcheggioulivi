@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 public class Util 
 {
-	
 	/**
 	 * Inserimento valore int con controlli
 	 * @param  scanner         è l'oggetto di classe Scanner utilizzato per la lettura di un input da tastiera
@@ -30,10 +29,13 @@ public class Util
 			
 			try {
 				valore = Integer.parseInt(sValue);
+				
+				if((valore < valMin || valore > valMax) && insObbligatorio == false)
+					return ritornoDefault;
 			}
 			catch(NumberFormatException e)
 			{
-				if(sValue.length() == 0 && !insObbligatorio)
+				if(!insObbligatorio)
 					return ritornoDefault;
 				else 
 					valore = valMin - 1;

@@ -1,7 +1,9 @@
 package it.volta.ts.ulivisamuel.parcheggioulivi.business;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,65 @@ import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.SiNo;
 
 public class BizDataBase
 {
+	/*public void inizializza() 
+	{
+		BufferedWriter writer = null;
+
+		try 
+		{
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoBRicarica.csv", false));
+			writer.append(new PiazzolaAuto(241, SiNo.NO, new Auto("NESSUNA", Motore.NON_ELETTRICO)).toCsvFormat() + "\n");
+			writer.close();
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoBRicarica.csv", true));
+			
+			for(int idx = 242; idx < 251; ++idx)
+			{
+				
+				
+				writer.append(new PiazzolaAuto(idx, SiNo.NO, new Auto("NESSUNA", Motore.NON_ELETTRICO)).toCsvFormat() + "\n");
+			}
+			writer.close();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileWriter(writer);
+		}
+	}*/
+	
+	/*
+	 * public void addItem(PiazzolaAutoAffittabile piazzolaAft) 
+	{
+		BufferedWriter writer = null;
+
+		try 
+		{
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoA.csv", false));
+			
+			writer.append(piazzolaAft.toCsvFormat() + "\n");
+			writer.close();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileWriter(writer);
+		}
+	}
+	 */
+	
+	public void inizializzaFile()
+	{
+		
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
 	public List<PiazzolaAutoAffittabile> listaPiazzoleAffittabili(boolean soloLibere)
 	{
 		BufferedReader                reader = null;
@@ -43,7 +104,7 @@ public class BizDataBase
 		}
 		finally 
 		{
-			chiudiFile(reader);
+			chiudiFileReader(reader);
 		}
 		return mess;
 	}
@@ -90,7 +151,7 @@ public class BizDataBase
 		}
 		finally 
 		{
-			chiudiFile(reader);
+			chiudiFileReader(reader);
 		}
 		return mess;
 	}
@@ -136,7 +197,7 @@ public class BizDataBase
 		}
 		finally 
 		{
-			chiudiFile(reader);
+			chiudiFileReader(reader);
 		}
 		return mess;
 	}
@@ -186,7 +247,7 @@ public class BizDataBase
 		}
 		finally 
 		{
-			chiudiFile(reader);
+			chiudiFileReader(reader);
 		}
 		return mess;
 	}
@@ -204,11 +265,23 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void chiudiFile(BufferedReader reader)
+	private void chiudiFileReader(BufferedReader reader)
 	{
 		try 
 		{
 			reader.close();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+	    }
+	}
+	
+	private void chiudiFileWriter(BufferedWriter writer)
+	{
+		try 
+		{
+			writer.close();
 		} 
 		catch (Exception e) 
 		{

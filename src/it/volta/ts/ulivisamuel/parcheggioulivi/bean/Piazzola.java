@@ -44,4 +44,11 @@ public abstract class Piazzola
 	{
 		return "Piazzola [numeroParcheggio=" + numeroParcheggio + ", occupato=" + occupato + "]";
 	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public String toCsvFormat()
+	{
+		return numeroParcheggio + "," + occupato;
+	}
 }
