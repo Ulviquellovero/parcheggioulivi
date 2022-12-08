@@ -15,6 +15,8 @@ public class Main
 	 *    - migliora output
 	 *    - aggiungi commenti
 	 *    - piazzole affittabili non devo guardare non occupate ma non affittate
+	 *    - mettere in business ciò chje deve stare in business e non in console
+	 *    -controllare se per inserimento base auto bisogna vedere pure in posto A
 	 */
 	
 	public static void main(String[] args) 

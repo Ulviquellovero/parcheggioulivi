@@ -9,6 +9,7 @@ import it.volta.ts.ulivisamuel.parcheggioulivi.bean.PiazzolaAutoAffittabile;
 import it.volta.ts.ulivisamuel.parcheggioulivi.bean.PiazzolaScooter;
 import it.volta.ts.ulivisamuel.parcheggioulivi.business.BizDataBase;
 import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.Motore;
+import it.volta.ts.ulivisamuel.parcheggioulivi.exceptions.NoPostiLiberi;
 import it.volta.ts.ulivisamuel.parcheggioulivi.util.Util;
 
 public class Console
@@ -190,7 +191,7 @@ public class Console
 	private void inserisciDatiAuto()
 	{
 		String menuTipoMotore = "\nInserisci il numero indicato in base al tipo di motore dell'auto arrivata"
-				              + "\n   1.Motore non elettrico\n   2.Motore elettrico\n   0.Per annullare l'operazione";
+				              + "\n   1.Motore elettrico\n   2.Motore non elettrico\n   0.Per annullare l'operazione";
 		
 		Auto    auto      = new Auto(null, null);
 		String  targa     = "";  
@@ -216,7 +217,7 @@ public class Console
 				if(auto.getMotore() == Motore.values()[0])
 					inserisciAutoElettrica();
 				else
-					inserisciAutoTermica();
+					inserisciAutoTermica(auto);
 			}
 		}
 	}
@@ -264,15 +265,28 @@ public class Console
 		
 		int scelta = -1;
 		
-		while(scelta == -1)
+		while(scelta == -1) 
 			scelta = Util.leggiInt(scanner, menuRicarica, 0, 2, false, -1);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void inserisciAutoTermica()
+	private void inserisciAutoTermica(Auto auto)
 	{
+		int esistente = bizDataBase.trovaTargaAffitto(auto.getTarga());
 		
+		if(esistente != 0)
+		{
+			System.out.println("\nLa piazzola " + esistente + " è già occupata dalla targa " + auto.getTarga());
+		}
+		else
+		{
+			try {
+				bizDataBase.nuovaAutoOrd(auto);
+			} catch (NoPostiLiberi e) {
+				e.printStackTrace();
+			}
+		}
 	}
 		
 	//---------------------------------------------------------------------------------------------

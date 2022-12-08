@@ -14,6 +14,7 @@ import it.volta.ts.ulivisamuel.parcheggioulivi.bean.PiazzolaScooter;
 import it.volta.ts.ulivisamuel.parcheggioulivi.bean.Scooter;
 import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.Motore;
 import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.SiNo;
+import it.volta.ts.ulivisamuel.parcheggioulivi.exceptions.NoPostiLiberi;
 
 public class BizDataBase
 {
@@ -277,6 +278,114 @@ public class BizDataBase
 	    }
 	}
 	
+	//---------------------------------------------------------------------------------------------
+	
+	public int trovaTargaAffitto(String targa)
+	{
+		BufferedReader reader = null;
+		String         riga   = "";
+		
+		try
+		{
+			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoA.csv"));
+				
+			while((riga = reader.readLine()) != null) 
+			{
+				String[] campi = riga.split(",");
+				
+				if(campi[2].equals(targa))
+					return Integer.parseInt(campi[0]);
+			}
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileReader(reader);
+		}
+		
+		return 0;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public void nuovaAutoOrd(Auto auto) throws NoPostiLiberi
+	{
+		List<PiazzolaAuto> list = listaPiazzoleOrdinarie(true, true);
+		
+		if(list.size() == 0)
+		{
+			list = listaPiazzoleOrdinarie(false, true);
+			if(list.size() == 0)
+				throw new NoPostiLiberi("Impossibile assegnare una piazzola all'auto. Parcheggio pieno!");
+			
+			list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), false);
+			sovrascriviFile(false, list);
+		}
+		else
+		{
+			list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), true);
+			sovrascriviFile(true, list);
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAuto> sovrascriviLista(Auto auto, int riga, boolean pianoB)
+	{
+		List<PiazzolaAuto> list = listaPiazzoleOrdinarie(pianoB, false);
+		
+		for(PiazzolaAuto piazzola : list)
+		{
+			if(piazzola.getNumeroParcheggio() == riga)
+			{
+				piazzola.setAuto(auto);
+				piazzola.setOccupato(SiNo.SI);
+			}
+		}
+		
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void sovrascriviFile(boolean pianoB, List<PiazzolaAuto> list) 
+	{
+		BufferedWriter writer = null;
+		int            nVolte;
+		try 
+		{
+			if(pianoB)
+				writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoB.csv", false));
+			else
+				writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoC.csv", false));
+			writer.append(list.get(0).toCsvFormat() + "\n");
+			writer.close();
+			if(pianoB)
+				writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoB.csv", true));
+			else
+				writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoC.csv", true));
+			nVolte = pianoB ? 90 : 100;
+			
+			for(int idx = 1; idx < nVolte; ++idx)
+				writer.append(list.get(idx).toCsvFormat() + "\n");
+			
+			writer.close();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileWriter(writer);
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
 	private void chiudiFileWriter(BufferedWriter writer)
 	{
 		try 
@@ -288,74 +397,4 @@ public class BizDataBase
 			e.printStackTrace();
 	    }
 	}
-	
-	//---------------------------------------------------------------------------------------------
-	
-	/*public List<String[]> listaPianoPiazzoleLibere(String percorso)
-	{
-		BufferedReader reader = null;
-		String         riga   = "";
-		List<String[]> mess   = new ArrayList<String[]>();
-		try
-		{
-			reader = new BufferedReader(new FileReader(percorso));
-			while((riga = reader.readLine()) != null) 
-			{
-				String[] campi = riga.split(",");
-				if(campi[1].equals("NO") || campi[1].equals("Occupato"))
-					mess.add(campi);
-			}
-		}
-		catch(Exception e) 
-		{
-			e.printStackTrace();
-		}
-		finally 
-		{
-			try 
-			{
-				reader.close();
-			} 
-			catch (Exception e) 
-			{
-				e.printStackTrace();
-		    }
-		}
-		return mess;
-	}*/
-	
-	//---------------------------------------------------------------------------------------------
-	
-	/*public List<String[]> listaPianoPiazzoleAffittabili()
-	{
-		BufferedReader reader = null;
-		String         riga   = "";
-		List<String[]> mess   = new ArrayList<String[]>();
-		try
-		{
-			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoA.csv"));
-			while((riga = reader.readLine()) != null) 
-			{
-				String[] campi = riga.split(",");
-				if(campi[5].equals("NO") || campi[1].equals("Affittato"))
-					mess.add(campi);
-			}
-		}
-		catch(Exception e) 
-		{
-			e.printStackTrace();
-		}
-		finally 
-		{
-			try 
-			{
-				reader.close();
-			} 
-			catch (Exception e) 
-			{
-				e.printStackTrace();
-		    }
-		}
-		return mess;
-	}*/
 }
