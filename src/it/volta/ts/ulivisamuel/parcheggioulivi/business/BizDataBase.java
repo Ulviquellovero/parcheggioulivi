@@ -356,25 +356,25 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean cercaTargaAuto(String targa)
+	public String cercaTargaAuto(String targa)
 	{
 		int ris = cercaTargaPianoAAuto(targa);
 		if(ris != 0)
-			return true;
+			return "Piano A numero " + ris;
 		
 		ris = cercaTargaPianoB(targa);
 		if(ris != 0)
-			return true;
+			return "Piano B numero " + ris;
 		
 		ris = cercaTargaPianoBRicarica(targa);
 		if(ris != 0)
-			return true;
+			return "Piano B con ricarica numero " + ris;
 		
 		ris = cercaTargaPianoC(targa);
 		if(ris != 0)
-			return true;
+			return "Piano C numero " + ris;
 		
-		return false;
+		return "";
 	}
 	
 	//---------------------------------------------------------------------------------------------

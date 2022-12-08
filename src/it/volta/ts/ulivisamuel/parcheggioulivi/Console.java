@@ -43,14 +43,14 @@ public class Console
 		String  menu     = "\nInserisci il numero indicato per\n   1.Visualizzare lo stato di tutte le piazzole nel parcheggio"
 						 + "\n   2.Visualizzare solo lo stato delle piazzole non occupate nel parcheggio"
 						 + "\n   3.Visualizzare solo lo stato delle piazzole affittabili nel parcheggio\n   4.Checkin veicolo"
-						 + "\n   0.Uscire dal programma";
+						 + "\n   5.Cerca targa nel parcheggio\n   0.Uscire dal programma";
 		
 		int     scelta   = 0;
 		boolean continua = true;
 		
 		while(continua)
 		{
-			scelta = Util.leggiInt(scanner, menu, 0, 4, false, -1);
+			scelta = Util.leggiInt(scanner, menu, 0, 5, false, -1);
 			
 			switch(scelta)
 			{
@@ -68,6 +68,10 @@ public class Console
 				
 			case 4:
 				checkInVeicolo();
+				break;
+				
+			case 5:
+				cercaVeicolo();
 				break;
 				
 			case -1:
@@ -207,7 +211,7 @@ public class Console
 			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
 					                        + " es.AA999AA", false, null);
 			
-			if(bizDataBase.cercaTargaAuto(targa))
+			if(bizDataBase.cercaTargaAuto(targa) != "")
 			{
 				System.out.println("\nQuesta targa appartiene già ad un auto presente nel parcheggio");
 				targa = "";
@@ -292,6 +296,10 @@ public class Console
 			scooter.setTarga(targa);
 			inserisciScooter(scooter);
 		}
+		else
+		{
+			System.out.println("\nOperazione annullata");
+		}
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -304,5 +312,40 @@ public class Console
 			System.out.println("\nOperazione andata a buon fine!");
 		else
 			System.out.println("\nParcheggio pieno!");
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void cercaVeicolo()
+	{
+		String targa = "";
+		while(!bizVeicoli.verificaTargaScooter(targa) && !bizVeicoli.verificaTargaAuto(targa))
+		{
+			targa = Util.leggiString(scanner, "\nInserisci la targa dello scooter arrivato oppure invio per annullare l'operazione"
+					+ " es.AA99999", false, null);
+		}
+		if(targa != null)
+		{
+			if(bizVeicoli.verificaTargaScooter(targa))
+			{
+				int num = bizDataBase.cercaTargaPianoAScooter(targa);
+				if(num != 0)
+					System.out.println("\nScooter con targa corrispondente trovato nella zona --> Piano A parcheggi scooter numero " + num);
+				else
+					System.out.println("\nNon è presente alcuno scooter con questa targa nel parcheggio");
+			}
+			else
+			{
+				String zona = bizDataBase.cercaTargaAuto(targa);
+				if(zona != "")
+					System.out.println("\nAuto con targa corrispondente trovata nella zona --> " + zona);
+				else
+					System.out.println("\nNon è presente alcuna auto con questa targa nel parcheggio");
+			}
+		}
+		else
+		{
+			System.out.println("\nOperazione annullata");
+		}
 	}
 }
