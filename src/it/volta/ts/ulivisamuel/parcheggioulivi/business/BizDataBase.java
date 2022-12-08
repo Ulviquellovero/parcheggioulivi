@@ -14,69 +14,9 @@ import it.volta.ts.ulivisamuel.parcheggioulivi.bean.PiazzolaScooter;
 import it.volta.ts.ulivisamuel.parcheggioulivi.bean.Scooter;
 import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.Motore;
 import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.SiNo;
-import it.volta.ts.ulivisamuel.parcheggioulivi.exceptions.NoPostiLiberi;
 
 public class BizDataBase
 {
-	/*public void inizializza() 
-	{
-		BufferedWriter writer = null;
-
-		try 
-		{
-			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoBRicarica.csv", false));
-			writer.append(new PiazzolaAuto(241, SiNo.NO, new Auto("NESSUNA", Motore.NON_ELETTRICO)).toCsvFormat() + "\n");
-			writer.close();
-			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoBRicarica.csv", true));
-			
-			for(int idx = 242; idx < 251; ++idx)
-			{
-				
-				
-				writer.append(new PiazzolaAuto(idx, SiNo.NO, new Auto("NESSUNA", Motore.NON_ELETTRICO)).toCsvFormat() + "\n");
-			}
-			writer.close();
-		}
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		finally 
-		{
-			chiudiFileWriter(writer);
-		}
-	}*/
-	
-	/*
-	 * public void addItem(PiazzolaAutoAffittabile piazzolaAft) 
-	{
-		BufferedWriter writer = null;
-
-		try 
-		{
-			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoA.csv", false));
-			
-			writer.append(piazzolaAft.toCsvFormat() + "\n");
-			writer.close();
-		}
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}
-		finally 
-		{
-			chiudiFileWriter(writer);
-		}
-	}
-	 */
-	
-	public void inizializzaFile()
-	{
-		
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
 	public List<PiazzolaAutoAffittabile> listaPiazzoleAffittabili(boolean soloLibere)
 	{
 		BufferedReader                reader = null;
@@ -266,21 +206,7 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void chiudiFileReader(BufferedReader reader)
-	{
-		try 
-		{
-			reader.close();
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-	    }
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
-	public int trovaTargaAffitto(String targa)
+	public int cercaTargaPianoAAuto(String targa)
 	{
 		BufferedReader reader = null;
 		String         riga   = "";
@@ -292,7 +218,6 @@ public class BizDataBase
 			while((riga = reader.readLine()) != null) 
 			{
 				String[] campi = riga.split(",");
-				
 				if(campi[2].equals(targa))
 					return Integer.parseInt(campi[0]);
 			}
@@ -311,7 +236,164 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public void nuovaAutoOrd(Auto auto) throws NoPostiLiberi
+	public int cercaTargaPianoAScooter(String targa)
+	{
+		BufferedReader reader = null;
+		String         riga   = "";
+		
+		try
+		{
+			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoAScooter.csv"));
+				
+			while((riga = reader.readLine()) != null) 
+			{
+				String[] campi = riga.split(",");
+				if(campi[2].equals(targa))
+					return Integer.parseInt(campi[0]);
+			}
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileReader(reader);
+		}
+		
+		return 0;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private int cercaTargaPianoB(String targa)
+	{
+		BufferedReader reader = null;
+		String         riga   = "";
+		
+		try
+		{
+			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoB.csv"));
+				
+			while((riga = reader.readLine()) != null) 
+			{
+				String[] campi = riga.split(",");
+				if(campi[2].equals(targa))
+					return Integer.parseInt(campi[0]);
+			}
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileReader(reader);
+		}
+		
+		return 0;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private int cercaTargaPianoBRicarica(String targa)
+	{
+		BufferedReader reader = null;
+		String         riga   = "";
+		
+		try
+		{
+			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoBRicarica.csv"));
+				
+			while((riga = reader.readLine()) != null) 
+			{
+				String[] campi = riga.split(",");
+				if(campi[2].equals(targa))
+					return Integer.parseInt(campi[0]);
+			}
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileReader(reader);
+		}
+		
+		return 0;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private int cercaTargaPianoC(String targa)
+	{
+		BufferedReader reader = null;
+		String         riga   = "";
+		
+		try
+		{
+			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoC.csv"));
+				
+			while((riga = reader.readLine()) != null) 
+			{
+				String[] campi = riga.split(",");
+				if(campi[2].equals(targa))
+					return Integer.parseInt(campi[0]);
+			}
+		}
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileReader(reader);
+		}
+		
+		return 0;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public boolean cercaTargaAuto(String targa)
+	{
+		int ris = cercaTargaPianoAAuto(targa);
+		if(ris != 0)
+			return true;
+		
+		ris = cercaTargaPianoB(targa);
+		if(ris != 0)
+			return true;
+		
+		ris = cercaTargaPianoBRicarica(targa);
+		if(ris != 0)
+			return true;
+		
+		ris = cercaTargaPianoC(targa);
+		if(ris != 0)
+			return true;
+		
+		return false;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void chiudiFileReader(BufferedReader reader)
+	{
+		try 
+		{
+			reader.close();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+	    }
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public boolean nuovaAutoOrd(Auto auto)
 	{
 		List<PiazzolaAuto> list = listaPiazzoleOrdinarie(true, true);
 		
@@ -319,7 +401,7 @@ public class BizDataBase
 		{
 			list = listaPiazzoleOrdinarie(false, true);
 			if(list.size() == 0)
-				throw new NoPostiLiberi("Impossibile assegnare una piazzola all'auto. Parcheggio pieno!");
+				return false;
 			
 			list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), false);
 			sovrascriviFile(false, list);
@@ -329,6 +411,8 @@ public class BizDataBase
 			list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), true);
 			sovrascriviFile(true, list);
 		}
+		
+		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -370,6 +454,126 @@ public class BizDataBase
 			nVolte = pianoB ? 90 : 100;
 			
 			for(int idx = 1; idx < nVolte; ++idx)
+				writer.append(list.get(idx).toCsvFormat() + "\n");
+			
+			writer.close();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileWriter(writer);
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public boolean nuovaAutoElettrica(Auto auto)
+	{
+		List<PiazzolaAuto> list = listaPiazzoleRicarica(true);
+		
+		if(list.size() == 0)
+			return false;
+		
+		list = sovrascriviListaRicarica(auto, list.get(0).getNumeroParcheggio());
+		sovrascriviFileRicarica(list);
+		
+		return true;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAuto> sovrascriviListaRicarica(Auto auto, int riga)
+	{
+		List<PiazzolaAuto> list = listaPiazzoleRicarica(false);
+		
+		for(PiazzolaAuto piazzola : list)
+		{
+			if(piazzola.getNumeroParcheggio() == riga)
+			{
+				piazzola.setAuto(auto);
+				piazzola.setOccupato(SiNo.SI);
+			}
+		}
+		
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void sovrascriviFileRicarica(List<PiazzolaAuto> list) 
+	{
+		BufferedWriter writer = null;
+		try 
+		{
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoBRicarica.csv", false));
+			writer.append(list.get(0).toCsvFormat() + "\n");
+			writer.close();
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoBRicarica.csv", true));
+			
+			for(int idx = 1; idx < 10; ++idx)
+				writer.append(list.get(idx).toCsvFormat() + "\n");
+			
+			writer.close();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileWriter(writer);
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public boolean nuovaScooter(Scooter scooter)
+	{
+		List<PiazzolaScooter> list = listaPiazzoleScooter(true);
+		
+		if(list.size() == 0)
+			return false;
+		
+		list = sovrascriviListaScooter(scooter, list.get(0).getNumeroParcheggio());
+		sovrascriviFileScooter(list);
+		
+		return true;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaScooter> sovrascriviListaScooter(Scooter scooter, int riga)
+	{
+		List<PiazzolaScooter> list = listaPiazzoleScooter(false);
+		
+		for(PiazzolaScooter piazzola : list)
+		{
+			if(piazzola.getNumeroParcheggio() == riga)
+			{
+				piazzola.setScooter(scooter);
+				piazzola.setOccupato(SiNo.SI);
+			}
+		}
+		
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void sovrascriviFileScooter(List<PiazzolaScooter> list) 
+	{
+		BufferedWriter writer = null;
+		try 
+		{
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoAScooter.csv", false));
+			writer.append(list.get(0).toCsvFormat() + "\n");
+			writer.close();
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoAScooter.csv", true));
+			
+			for(int idx = 1; idx < 10; ++idx)
 				writer.append(list.get(idx).toCsvFormat() + "\n");
 			
 			writer.close();
