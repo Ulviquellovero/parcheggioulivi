@@ -360,8 +360,20 @@ public class BizDataBase
 	{
 		int ris = cercaTargaPianoAAuto(targa);
 		if(ris != 0)
-			return "Piano A numero " + ris;
-		
+		{
+			if(ris < 10)
+			{
+				return "Piano A numero 00" + ris;
+			}
+			else
+			{
+				if(ris > 10 && ris != 100)
+					return "Piano A numero 0" + ris;
+				else
+					return "Piano A numero " + ris;
+			}
+		}
+			
 		ris = cercaTargaPianoB(targa);
 		if(ris != 0)
 			return "Piano B numero " + ris;
@@ -395,23 +407,32 @@ public class BizDataBase
 	
 	public boolean nuovaAutoOrd(Auto auto)
 	{
-		List<PiazzolaAuto> list = listaPiazzoleOrdinarie(true, true);
+		List<PiazzolaAutoAffittabile> listAft = listaPiazzoleAffittabili(true);
 		
-		if(list.size() == 0)
+		if(listAft.size() == 0)
 		{
-			list = listaPiazzoleOrdinarie(false, true);
-			if(list.size() == 0)
-				return false;
+			List<PiazzolaAuto> list               = listaPiazzoleOrdinarie(true, true);
 			
-			list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), false);
-			sovrascriviFile(false, list);
+			if(list.size() == 0)
+			{
+				list = listaPiazzoleOrdinarie(false, true);
+				if(list.size() == 0)
+					return false;
+				
+				list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), false);
+				sovrascriviFile(false, list);
+			}
+			else
+			{
+				list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), true);
+				sovrascriviFile(true, list);
+			}
 		}
 		else
 		{
-			list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), true);
-			sovrascriviFile(true, list);
+			listAft = sovrascriviListaAffittabili(auto, listAft.get(0).getNumeroParcheggio());
+			sovrascriviFileAffittata(listAft);
 		}
-		
 		return true;
 	}
 	

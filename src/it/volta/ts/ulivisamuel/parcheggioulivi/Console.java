@@ -270,6 +270,11 @@ public class Console
 				System.out.println("\nOperazione andata a buon fine!");
 			else
 				System.out.println("\nParcheggio pieno!");
+			
+		}
+		else
+		{
+			inserisciAutoTermica(auto);
 		}
 	}
 	
