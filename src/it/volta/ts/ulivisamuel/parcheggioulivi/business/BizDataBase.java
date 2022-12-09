@@ -607,10 +607,8 @@ public class BizDataBase
 			writer.append(list.get(0).toCsvFormat() + "\n");
 			writer.close();
 			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoA.csv", true));
-			
 			for(int idx = 1; idx < 100; ++idx)
 				writer.append(list.get(idx).toCsvFormat() + "\n");
-			
 			writer.close();
 		}
 		catch (Exception e) 
