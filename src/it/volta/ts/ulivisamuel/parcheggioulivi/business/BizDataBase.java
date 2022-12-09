@@ -210,11 +210,9 @@ public class BizDataBase
 	{
 		BufferedReader reader = null;
 		String         riga   = "";
-		
 		try
 		{
 			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoA.csv"));
-				
 			while((riga = reader.readLine()) != null) 
 			{
 				String[] campi = riga.split(",");
@@ -230,7 +228,6 @@ public class BizDataBase
 		{
 			chiudiFileReader(reader);
 		}
-		
 		return 0;
 	}
 	
@@ -240,11 +237,9 @@ public class BizDataBase
 	{
 		BufferedReader reader = null;
 		String         riga   = "";
-		
 		try
 		{
 			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoAScooter.csv"));
-				
 			while((riga = reader.readLine()) != null) 
 			{
 				String[] campi = riga.split(",");
@@ -260,7 +255,6 @@ public class BizDataBase
 		{
 			chiudiFileReader(reader);
 		}
-		
 		return 0;
 	}
 	
@@ -270,11 +264,9 @@ public class BizDataBase
 	{
 		BufferedReader reader = null;
 		String         riga   = "";
-		
 		try
 		{
 			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoB.csv"));
-				
 			while((riga = reader.readLine()) != null) 
 			{
 				String[] campi = riga.split(",");
@@ -290,7 +282,6 @@ public class BizDataBase
 		{
 			chiudiFileReader(reader);
 		}
-		
 		return 0;
 	}
 	
@@ -300,11 +291,9 @@ public class BizDataBase
 	{
 		BufferedReader reader = null;
 		String         riga   = "";
-		
 		try
 		{
-			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoBRicarica.csv"));
-				
+			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoBRicarica.csv"));	
 			while((riga = reader.readLine()) != null) 
 			{
 				String[] campi = riga.split(",");
@@ -320,7 +309,6 @@ public class BizDataBase
 		{
 			chiudiFileReader(reader);
 		}
-		
 		return 0;
 	}
 	
@@ -330,11 +318,9 @@ public class BizDataBase
 	{
 		BufferedReader reader = null;
 		String         riga   = "";
-		
 		try
 		{
 			reader = new BufferedReader(new FileReader("..\\parcheggioulivi\\pianoC.csv"));
-				
 			while((riga = reader.readLine()) != null) 
 			{
 				String[] campi = riga.split(",");
@@ -350,7 +336,6 @@ public class BizDataBase
 		{
 			chiudiFileReader(reader);
 		}
-		
 		return 0;
 	}
 	
@@ -377,15 +362,12 @@ public class BizDataBase
 		ris = cercaTargaPianoB(targa);
 		if(ris != 0)
 			return "Piano B numero " + ris;
-		
 		ris = cercaTargaPianoBRicarica(targa);
 		if(ris != 0)
 			return "Piano B con ricarica numero " + ris;
-		
 		ris = cercaTargaPianoC(targa);
 		if(ris != 0)
 			return "Piano C numero " + ris;
-		
 		return "";
 	}
 	
@@ -405,43 +387,39 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean nuovaAutoOrd(Auto auto)
+	public boolean parcheggiaAutoOrdinaria(Auto auto)
 	{
 		List<PiazzolaAutoAffittabile> listAft = listaPiazzoleAffittabili(true);
-		
 		if(listAft.size() == 0)
 		{
-			List<PiazzolaAuto> list               = listaPiazzoleOrdinarie(true, true);
-			
+			List<PiazzolaAuto> list = listaPiazzoleOrdinarie(true, true);
 			if(list.size() == 0)
 			{
 				list = listaPiazzoleOrdinarie(false, true);
 				if(list.size() == 0)
 					return false;
-				
-				list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), false);
-				sovrascriviFile(false, list);
+				list = sovrascriviListaPiazzoleOrd(auto, list.get(0).getNumeroParcheggio(), false);
+				sovrascriviFilePiazzoleOrd(false, list);
 			}
 			else
 			{
-				list = sovrascriviLista(auto, list.get(0).getNumeroParcheggio(), true);
-				sovrascriviFile(true, list);
+				list = sovrascriviListaPiazzoleOrd(auto, list.get(0).getNumeroParcheggio(), true);
+				sovrascriviFilePiazzoleOrd(true, list);
 			}
 		}
 		else
 		{
-			listAft = sovrascriviListaAffittabili(auto, listAft.get(0).getNumeroParcheggio());
-			sovrascriviFileAffittata(listAft);
+			listAft = sovrascriviListaPiazzoleAffittabili(auto, listAft.get(0).getNumeroParcheggio());
+			sovrascriviFIlePiazzoleAffittabili(listAft);
 		}
 		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private List<PiazzolaAuto> sovrascriviLista(Auto auto, int riga, boolean pianoB)
+	private List<PiazzolaAuto> sovrascriviListaPiazzoleOrd(Auto auto, int riga, boolean pianoB)
 	{
 		List<PiazzolaAuto> list = listaPiazzoleOrdinarie(pianoB, false);
-		
 		for(PiazzolaAuto piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
@@ -450,13 +428,12 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 			}
 		}
-		
 		return list;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void sovrascriviFile(boolean pianoB, List<PiazzolaAuto> list) 
+	private void sovrascriviFilePiazzoleOrd(boolean pianoB, List<PiazzolaAuto> list) 
 	{
 		BufferedWriter writer = null;
 		int            nVolte;
@@ -473,10 +450,8 @@ public class BizDataBase
 			else
 				writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoC.csv", true));
 			nVolte = pianoB ? 90 : 100;
-			
 			for(int idx = 1; idx < nVolte; ++idx)
 				writer.append(list.get(idx).toCsvFormat() + "\n");
-			
 			writer.close();
 		}
 		catch (Exception e) 
@@ -491,25 +466,21 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean nuovaAutoElettrica(Auto auto)
+	public boolean parcheggiaAutoElettrica(Auto auto)
 	{
 		List<PiazzolaAuto> list = listaPiazzoleRicarica(true);
-		
 		if(list.size() == 0)
 			return false;
-		
-		list = sovrascriviListaRicarica(auto, list.get(0).getNumeroParcheggio());
-		sovrascriviFileRicarica(list);
-		
+		list = sovrascriviListaPiazzoleRicarica(auto, list.get(0).getNumeroParcheggio());
+		sovrascriviFilePiazzoleRicarica(list);
 		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private List<PiazzolaAuto> sovrascriviListaRicarica(Auto auto, int riga)
+	private List<PiazzolaAuto> sovrascriviListaPiazzoleRicarica(Auto auto, int riga)
 	{
 		List<PiazzolaAuto> list = listaPiazzoleRicarica(false);
-		
 		for(PiazzolaAuto piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
@@ -518,13 +489,12 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 			}
 		}
-		
 		return list;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void sovrascriviFileRicarica(List<PiazzolaAuto> list) 
+	private void sovrascriviFilePiazzoleRicarica(List<PiazzolaAuto> list) 
 	{
 		BufferedWriter writer = null;
 		try 
@@ -533,10 +503,8 @@ public class BizDataBase
 			writer.append(list.get(0).toCsvFormat() + "\n");
 			writer.close();
 			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoBRicarica.csv", true));
-			
 			for(int idx = 1; idx < 10; ++idx)
 				writer.append(list.get(idx).toCsvFormat() + "\n");
-			
 			writer.close();
 		}
 		catch (Exception e) 
@@ -551,25 +519,21 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean nuovaScooter(Scooter scooter)
+	public boolean parcheggiaScooter(Scooter scooter)
 	{
 		List<PiazzolaScooter> list = listaPiazzoleScooter(true);
-		
 		if(list.size() == 0)
 			return false;
-		
-		list = sovrascriviListaScooter(scooter, list.get(0).getNumeroParcheggio());
-		sovrascriviFileScooter(list);
-		
+		list = sovrascriviListaPiazzoleScooter(scooter, list.get(0).getNumeroParcheggio());
+		sovrascriviListaPiazzoleScooter(list);
 		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private List<PiazzolaScooter> sovrascriviListaScooter(Scooter scooter, int riga)
+	private List<PiazzolaScooter> sovrascriviListaPiazzoleScooter(Scooter scooter, int riga)
 	{
 		List<PiazzolaScooter> list = listaPiazzoleScooter(false);
-		
 		for(PiazzolaScooter piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
@@ -578,13 +542,12 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 			}
 		}
-		
 		return list;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void sovrascriviFileScooter(List<PiazzolaScooter> list) 
+	private void sovrascriviListaPiazzoleScooter(List<PiazzolaScooter> list) 
 	{
 		BufferedWriter writer = null;
 		try 
@@ -593,10 +556,8 @@ public class BizDataBase
 			writer.append(list.get(0).toCsvFormat() + "\n");
 			writer.close();
 			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoAScooter.csv", true));
-			
 			for(int idx = 1; idx < 50; ++idx)
 				writer.append(list.get(idx).toCsvFormat() + "\n");
-			
 			writer.close();
 		}
 		catch (Exception e) 
@@ -611,21 +572,19 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public void occupaPiazAffittata(Auto auto)
+	public void parcheggiaAutoAffittuaria(Auto auto)
 	{
 		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
 		int                           pos  =     cercaTargaPianoAAuto(auto.getTarga());
-		
-		list = sovrascriviListaAffittabili(auto, pos);
-		sovrascriviFileAffittata(list);
+		list = sovrascriviListaPiazzoleAffittabili(auto, pos);
+		sovrascriviFIlePiazzoleAffittabili(list);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private List<PiazzolaAutoAffittabile> sovrascriviListaAffittabili(Auto auto, int riga)
+	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabili(Auto auto, int riga)
 	{
 		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
-		
 		for(PiazzolaAutoAffittabile piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
@@ -634,13 +593,12 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 			}
 		}
-		
 		return list;
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void sovrascriviFileAffittata(List<PiazzolaAutoAffittabile> list) 
+	private void sovrascriviFIlePiazzoleAffittabili(List<PiazzolaAutoAffittabile> list) 
 	{
 		BufferedWriter writer = null;
 		try 
