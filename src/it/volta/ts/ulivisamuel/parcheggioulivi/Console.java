@@ -203,7 +203,8 @@ public class Console
 				              + "\n   1.Motore elettrico\n   2.Motore non elettrico\n   0.Per annullare l'operazione";
 		
 		Auto    auto      = new Auto(null, null);
-		String  targa     = "";  
+		String  targa     = ""; 
+		String  mess      = "";
 		int     motore    = -1;
 		
 		while(!bizVeicoli.verificaTargaAuto(targa))
@@ -211,10 +212,22 @@ public class Console
 			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
 					                        + " es.AA999AA", false, null);
 			
-			if(bizDataBase.cercaTargaAuto(targa) != "")
+			mess = bizDataBase.cercaTargaAuto(targa);
+			
+			if(mess != "")
 			{
-				System.out.println("\nQuesta targa appartiene giÃ  ad un auto presente nel parcheggio");
-				targa = "";
+				if(mess.substring(0, 7).equals("Piano A"))
+				{
+					auto.setTarga(targa);
+					bizDataBase.occupaPiazAffittata(auto);
+					System.out.println("\nOperazione andata a buon fine");
+					return;
+				}
+				else
+				{
+					System.out.println("\nQuesta targa appartiene già ad un auto presente nel parcheggio");
+					targa = "";
+				}
 			}
 		}
 			
@@ -332,7 +345,7 @@ public class Console
 				if(num != 0)
 					System.out.println("\nScooter con targa corrispondente trovato nella zona --> Piano A parcheggi scooter numero " + num);
 				else
-					System.out.println("\nNon Ã¨ presente alcuno scooter con questa targa nel parcheggio");
+					System.out.println("\nNon è presente alcuno scooter con questa targa nel parcheggio");
 			}
 			else
 			{

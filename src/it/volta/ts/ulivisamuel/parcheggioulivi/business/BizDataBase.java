@@ -573,7 +573,63 @@ public class BizDataBase
 			writer.close();
 			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoAScooter.csv", true));
 			
-			for(int idx = 1; idx < 10; ++idx)
+			for(int idx = 1; idx < 50; ++idx)
+				writer.append(list.get(idx).toCsvFormat() + "\n");
+			
+			writer.close();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			chiudiFileWriter(writer);
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public void occupaPiazAffittata(Auto auto)
+	{
+		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
+		int                           pos  =     cercaTargaPianoAAuto(auto.getTarga());
+		
+		list = sovrascriviListaAffittabili(auto, pos);
+		sovrascriviFileAffittata(list);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAutoAffittabile> sovrascriviListaAffittabili(Auto auto, int riga)
+	{
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		
+		for(PiazzolaAutoAffittabile piazzola : list)
+		{
+			if(piazzola.getNumeroParcheggio() == riga)
+			{
+				piazzola.setAuto(auto);
+				piazzola.setOccupato(SiNo.SI);
+			}
+		}
+		
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void sovrascriviFileAffittata(List<PiazzolaAutoAffittabile> list) 
+	{
+		BufferedWriter writer = null;
+		try 
+		{
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoA.csv", false));
+			writer.append(list.get(0).toCsvFormat() + "\n");
+			writer.close();
+			writer = new BufferedWriter(new FileWriter("..\\parcheggioulivi\\pianoA.csv", true));
+			
+			for(int idx = 1; idx < 100; ++idx)
 				writer.append(list.get(idx).toCsvFormat() + "\n");
 			
 			writer.close();

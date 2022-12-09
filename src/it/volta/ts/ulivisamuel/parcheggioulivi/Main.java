@@ -17,6 +17,7 @@ public class Main
 	 *    - piazzole affittabili non devo guardare non occupate ma non affittate
 	 *    - mettere in business ciò chje deve stare in business e non in console
 	 *    -controllare se per inserimento base auto bisogna vedere pure in posto A
+	 *    -trova auto con targa con pack affittato solo se occupata
 	 */
 	
 	public static void main(String[] args) 
