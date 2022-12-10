@@ -48,7 +48,7 @@ public class Console
 		boolean continua = true;
 		while(continua)
 		{
-			scelta = Util.leggiInt(scanner, menu, 0, 6, false, -1);
+			scelta = Util.leggiInt(scanner, menu, 0, 7, false, -1);
 			switch(scelta)
 			{
 			case 1:
@@ -555,7 +555,7 @@ public class Console
 
 	//---------------------------------------------------------------------------------------------
 	
-	/*private void affittaPosto()
+	private void affittaPosto()
 	{
 		Auto    auto  = new Auto(null, null);
 		String  targa = ""; 
@@ -565,7 +565,24 @@ public class Console
                     + " es.AA999AA", false, null);
 			if(targa != null)
 			{
-				
+				if(bizVeicoli.verificaTargaAuto(targa))
+				{
+					int riga = bizDataBase.cercaTargaPianoAAuto(targa, false);
+					auto.setTarga(targa);
+					if(riga == 0)
+					{
+						boolean ris = bizDataBase.affittaPiazzola(auto);
+						if(ris)
+							System.out.println("Operazione andata a buon fine!");
+						else
+							System.out.println("Parcheggio pieno");
+					}
+					else
+					{
+						bizDataBase.affittaPiazzolaEsistente(riga);
+						System.out.println("Operazione andata a buon fine!");
+					}
+				}
 			}
 			else
 			{
@@ -573,5 +590,5 @@ public class Console
 				return;
 			}
 		}
-	}*/
+	}
 }

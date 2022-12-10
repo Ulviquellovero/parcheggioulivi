@@ -863,4 +863,60 @@ public class BizDataBase
 			e.printStackTrace();
 	    }
 	}
+
+	//---------------------------------------------------------------------------------------------
+	
+	public boolean affittaPiazzola(Auto auto)
+	{
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(true);
+		if(list.size() == 0)
+			return false;
+		list = sovrascriviListaPiazzoleAffittabileAffitta(auto, list.get(0).getNumeroParcheggio());
+		sovrascriviFIlePiazzoleAffittabili(list);
+		return true;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabileAffitta(Auto auto, int riga)
+	{
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		for(PiazzolaAutoAffittabile piazzola : list)
+		{
+			if(piazzola.getNumeroParcheggio() == riga)
+			{
+				piazzola.setAuto(auto);
+				piazzola.setAffittato(SiNo.SI);
+				return list;
+			}
+		}
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public void affittaPiazzolaEsistente(int riga)
+	{
+		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
+		list = sovrascriviListaPiazzoleAffittabileAffittaEs(riga);
+		sovrascriviFIlePiazzoleAffittabili(list);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabileAffittaEs(int riga)
+	{
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		for(PiazzolaAutoAffittabile piazzola : list)
+		{
+			if(piazzola.getNumeroParcheggio() == riga)
+			{
+				piazzola.setMinutoEntrata(0);
+				piazzola.setOraEntrata(0);
+				piazzola.setAffittato(SiNo.SI);
+				return list;
+			}
+		}
+		return list;
+	}
 }
