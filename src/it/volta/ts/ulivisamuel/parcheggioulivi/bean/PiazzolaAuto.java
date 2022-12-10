@@ -8,9 +8,9 @@ public class PiazzolaAuto extends Piazzola
 
 	//---------------------------------------------------------------------------------------------
 	
-	public PiazzolaAuto(int numeroParcheggio, SiNo occupato, Auto auto) 
+	public PiazzolaAuto(int numeroParcheggio, SiNo occupato, int oraEntrata, int minutoEntrata, Auto auto) 
 	{
-		super(numeroParcheggio, occupato);
+		super(numeroParcheggio, occupato, oraEntrata, minutoEntrata);
 		this.auto = auto;
 	}
 	
@@ -31,7 +31,7 @@ public class PiazzolaAuto extends Piazzola
 	public String toString() 
 	{
 		return "PiazzolaAuto [numeroParcheggio=" + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
-		       + ", Targa=" + auto.getTarga() + "]";
+		     + ", Targa=" + auto.getTarga() + ", oraIngresso=" + super.getOraEntrata() + ":" + super.getMinutoEntrata() + "]";
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -39,6 +39,7 @@ public class PiazzolaAuto extends Piazzola
 	@Override
 	public String toCsvFormat()
 	{
-		return super.toCsvFormat() + "," + auto.getTarga();
+		return super.getNumeroParcheggio() + "," + super.getOccupato() + "," + auto.getTarga() 
+		                                   + "," + super.getOraEntrata() + "," + super.getMinutoEntrata();
 	}
 }

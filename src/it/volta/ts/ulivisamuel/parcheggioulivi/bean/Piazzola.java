@@ -6,17 +6,21 @@ public abstract class Piazzola
 {
 	private int  numeroParcheggio;
 	private SiNo occupato;
+	private int  oraEntrata;
+	private int  minutoEntrata;
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public Piazzola(int  numeroParcheggio, SiNo occupato)
+	public Piazzola(int  numeroParcheggio, SiNo occupato, int oraEntrata, int minutoEntrata)
 	{
 		this.numeroParcheggio = numeroParcheggio;
-		this.occupato = occupato;
+		this.occupato         = occupato;
+		this.oraEntrata       = oraEntrata;
+		this.minutoEntrata    = minutoEntrata;
 	}
 	
 	//---------------------------------------------------------------------------------------------
-	
+
 	public int getNumeroParcheggio() 
 	{
 		return numeroParcheggio;
@@ -26,6 +30,18 @@ public abstract class Piazzola
 	{
 		return occupato;
 	}
+	
+	public int getOraEntrata() 
+	{
+		return oraEntrata;
+	}
+	
+	public int getMinutoEntrata()
+	{
+		return minutoEntrata;
+	}
+
+	
 	
 	public void setNumeroParcheggio(int numeroParcheggio) 
 	{
@@ -37,18 +53,29 @@ public abstract class Piazzola
 		this.occupato = occupato;
 	}
 	
+	public void setOraEntrata(int oraEntrata) 
+	{
+		this.oraEntrata = oraEntrata;
+	}
+	
+	public void setMinutoEntrata(int minutoEntrata) 
+	{
+		this.minutoEntrata = minutoEntrata;
+	}
+	
 	//---------------------------------------------------------------------------------------------
 
 	@Override
 	public String toString() 
 	{
-		return "Piazzola [numeroParcheggio=" + numeroParcheggio + ", occupato=" + occupato + "]";
+		return "Piazzola [numeroParcheggio=" + numeroParcheggio + ", occupato=" + occupato + ", oraIngresso=" + oraEntrata
+			 + ":" + minutoEntrata + "]";
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
 	public String toCsvFormat()
 	{
-		return numeroParcheggio + "," + occupato;
+		return numeroParcheggio + "," + occupato + "," + oraEntrata + "," + minutoEntrata;
 	}
 }

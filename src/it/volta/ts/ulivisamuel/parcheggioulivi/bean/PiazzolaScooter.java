@@ -8,9 +8,9 @@ public class PiazzolaScooter extends Piazzola
 
 	//---------------------------------------------------------------------------------------------
 	
-	public PiazzolaScooter(int numeroParcheggio, SiNo occupato, Scooter scooter)
+	public PiazzolaScooter(int numeroParcheggio, SiNo occupato, int oraEntrata, int minutoEntrata, Scooter scooter)
 	{
-		super(numeroParcheggio, occupato);
+		super(numeroParcheggio, occupato, oraEntrata, minutoEntrata);
 		this.scooter = scooter;
 	}
 	
@@ -32,12 +32,14 @@ public class PiazzolaScooter extends Piazzola
 	public String toString() 
 	{
 		return "PiazzolaScooter [numeroParcheggio=" + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
-		       + ", Targa=" + scooter.getTarga() + "]";
+		       + ", Targa=" + scooter.getTarga() + ", oraIngresso=" + super.getOraEntrata() + ":" + super.getMinutoEntrata() + "]";
 	}
 	
 	@Override
 	public String toCsvFormat() 
 	{
-		return super.toCsvFormat() + "," + scooter.getTarga();
+		return super.getNumeroParcheggio() + "," + super.getOccupato() + "," + scooter.getTarga()
+										   + "," + super.getOraEntrata() + "," + super.getMinutoEntrata();
+		
 	}
 }

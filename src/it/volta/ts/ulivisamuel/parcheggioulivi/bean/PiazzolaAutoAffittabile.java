@@ -8,9 +8,9 @@ public class PiazzolaAutoAffittabile extends PiazzolaAuto
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public PiazzolaAutoAffittabile(int numeroParcheggio, SiNo occupato, Auto auto, SiNo affittato) 
+	public PiazzolaAutoAffittabile(int numeroParcheggio, SiNo occupato, int oraEntrata, int minutoEntrata, Auto auto, SiNo affittato) 
 	{
-		super(numeroParcheggio, occupato, auto);
+		super(numeroParcheggio, occupato, oraEntrata, minutoEntrata, auto);
 		this.affittato = affittato;
 	}
 
@@ -42,7 +42,8 @@ public class PiazzolaAutoAffittabile extends PiazzolaAuto
 		}
 		
 		return "PiazzolaAutoAffittabile [numeroParcheggio=" + zeri + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
-		       + ", Targa=" + super.getAuto().getTarga() + ", affittato=" + affittato + "]";
+		     + ", Targa=" + super.getAuto().getTarga() + ", oraIngresso=" + super.getOraEntrata() + ":" + super.getMinutoEntrata() 
+		     + ", affittato=" + affittato + "]";
 	}
 	
 	//---------------------------------------------------------------------------------------------
