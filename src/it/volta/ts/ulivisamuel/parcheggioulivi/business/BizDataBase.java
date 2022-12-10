@@ -459,6 +459,36 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
+	public void uscitaAuto(Auto auto)
+	{
+		int ris = cercaTargaPianoAAuto(auto.getTarga(), false);
+		if(ris != 0)
+		{
+			uscitaAutoAffittuaria(auto, false);
+			return;
+		}
+		ris = cercaTargaPianoB(auto.getTarga());
+		if(ris != 0)
+		{
+			uscitaAutoOrdinaria(auto, true);
+			return;
+		}
+		ris = cercaTargaPianoBRicarica(auto.getTarga());
+		if(ris != 0)
+		{
+			uscitaAutoElettrica(auto);
+			return;
+		}
+		ris = cercaTargaPianoC(auto.getTarga());
+		if(ris != 0)
+		{
+			uscitaAutoOrdinaria(auto, false);
+			return;
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
 	public void parcheggiaAutoAffittuaria(Auto auto, int pos)
 	{
 		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
@@ -487,22 +517,28 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public void uscitaAutoAffittuaria(Auto auto)
+	public void uscitaAutoAffittuaria(Auto auto, boolean afittuaria)
 	{
 		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
-		list = sovrascriviListaPiazzoleAffittabiliCancella(auto);
+		list = sovrascriviListaPiazzoleAffittabiliCancella(auto, afittuaria);
 		sovrascriviFIlePiazzoleAffittabili(list);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabiliCancella(Auto auto)
+	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabiliCancella(Auto auto, boolean afittuaria)
 	{
 		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
 		for(PiazzolaAutoAffittabile piazzola : list)
 		{
 			if(piazzola.getAuto().getTarga().equals(auto.getTarga()))
 			{
+				if(!afittuaria)
+				{
+					piazzola.setAuto(new Auto("NESSUNA", Motore.NON_ELETTRICO));
+					piazzola.setMinutoEntrata(0);
+					piazzola.setOraEntrata(0);
+				}
 				piazzola.setOccupato(SiNo.NO);
 				return list;
 			}
@@ -671,6 +707,34 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
+	private void uscitaAutoOrdinaria(Auto auto, boolean pianoB)
+	{
+		List<PiazzolaAuto> list = new ArrayList<PiazzolaAuto>();
+		list = sovrascriviListaPiazzoleOrdCancella(auto, pianoB);
+		sovrascriviFilePiazzoleOrd(pianoB, list);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAuto> sovrascriviListaPiazzoleOrdCancella(Auto auto, boolean pianoB)
+	{
+		List<PiazzolaAuto> list = listaPiazzoleOrdinarie(pianoB, false);
+		for(PiazzolaAuto piazzola : list)
+		{
+			if(piazzola.getAuto().getTarga().equals(auto.getTarga()))
+			{
+				piazzola.setAuto(new Auto("NESSUNA", Motore.NON_ELETTRICO));
+				piazzola.setOccupato(SiNo.NO);
+				piazzola.setOraEntrata(0);
+				piazzola.setMinutoEntrata(0);
+				return list;
+			}
+		}
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
 	private void sovrascriviFilePiazzoleOrd(boolean pianoB, List<PiazzolaAuto> list) 
 	{
 		BufferedWriter writer = null;
@@ -727,6 +791,34 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 				piazzola.setOraEntrata(ZonedDateTime.now().getHour());
 				piazzola.setMinutoEntrata(ZonedDateTime.now().getMinute());
+				return list;
+			}
+		}
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void uscitaAutoElettrica(Auto auto)
+	{
+		List<PiazzolaAuto> list = new ArrayList<PiazzolaAuto>();
+		list = sovrascriviListaPiazzoleRicaricaCancella(auto);
+		sovrascriviFilePiazzoleRicarica(list);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAuto> sovrascriviListaPiazzoleRicaricaCancella(Auto auto)
+	{
+		List<PiazzolaAuto> list = listaPiazzoleRicarica(false);
+		for(PiazzolaAuto piazzola : list)
+		{
+			if(piazzola.getAuto().getTarga().equals(auto.getTarga()))
+			{
+				piazzola.setAuto(new Auto("NESSUNA", Motore.NON_ELETTRICO));
+				piazzola.setOccupato(SiNo.NO);
+				piazzola.setOraEntrata(0);
+				piazzola.setMinutoEntrata(0);
 				return list;
 			}
 		}
