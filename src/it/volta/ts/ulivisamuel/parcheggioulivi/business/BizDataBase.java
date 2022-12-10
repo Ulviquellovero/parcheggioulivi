@@ -417,6 +417,7 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 				piazzola.setOraEntrata(ZonedDateTime.now().getHour());
 				piazzola.setMinutoEntrata(ZonedDateTime.now().getMinute());
+				return list;
 			}
 		}
 		return list;
@@ -461,18 +462,6 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean uscitaScooter(Scooter scooter)
-	{
-		List<PiazzolaScooter> list = listaPiazzoleScooter(true);
-		if(list.size() == 0)
-			return false;
-		list = sovrascriviListaPiazzoleScooter(scooter, list.get(0).getNumeroParcheggio());
-		sovrascriviListaPiazzoleScooter(list);
-		return true;
-	}
-	
-	//---------------------------------------------------------------------------------------------
-	
 	private List<PiazzolaScooter> sovrascriviListaPiazzoleScooter(Scooter scooter, int riga)
 	{
 		List<PiazzolaScooter> list = listaPiazzoleScooter(false);
@@ -484,6 +473,36 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 				piazzola.setOraEntrata(ZonedDateTime.now().getHour());
 				piazzola.setMinutoEntrata(ZonedDateTime.now().getMinute());
+				return list;
+			}
+		}
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public boolean uscitaScooter(Scooter scooter)
+	{
+		List<PiazzolaScooter> list = new ArrayList<PiazzolaScooter>();
+		list = sovrascriviListaPiazzoleScooterCancella(scooter);
+		sovrascriviListaPiazzoleScooter(list);
+		return true;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaScooter> sovrascriviListaPiazzoleScooterCancella(Scooter scooter)
+	{
+		List<PiazzolaScooter> list = listaPiazzoleScooter(false);
+		for(PiazzolaScooter piazzola : list)
+		{
+			if(piazzola.getScooter().getTarga().equals(scooter.getTarga()))
+			{
+				piazzola.setScooter(new Scooter("NESSUNA"));
+				piazzola.setOccupato(SiNo.NO);
+				piazzola.setOraEntrata(0);
+				piazzola.setMinutoEntrata(0);
+				return list;
 			}
 		}
 		return list;
@@ -557,6 +576,7 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 				piazzola.setOraEntrata(ZonedDateTime.now().getHour());
 				piazzola.setMinutoEntrata(ZonedDateTime.now().getMinute());
+				return list;
 			}
 		}
 		return list;
@@ -620,6 +640,7 @@ public class BizDataBase
 				piazzola.setOccupato(SiNo.SI);
 				piazzola.setOraEntrata(ZonedDateTime.now().getHour());
 				piazzola.setMinutoEntrata(ZonedDateTime.now().getMinute());
+				return list;
 			}
 		}
 		return list;
