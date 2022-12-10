@@ -12,6 +12,7 @@ public class Main
 	 *    - mettere apposto interfaccia
 	 *    - aggiungi commenti
 	 *    - arrivo auto afittata solo se non presente
+	 *    - no annulla ma torna indietro
 	 */
 	
 	public static void main(String[] args) 

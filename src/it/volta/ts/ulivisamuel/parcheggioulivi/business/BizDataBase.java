@@ -461,6 +461,18 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
+	public boolean uscitaScooter(Scooter scooter)
+	{
+		List<PiazzolaScooter> list = listaPiazzoleScooter(true);
+		if(list.size() == 0)
+			return false;
+		list = sovrascriviListaPiazzoleScooter(scooter, list.get(0).getNumeroParcheggio());
+		sovrascriviListaPiazzoleScooter(list);
+		return true;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
 	private List<PiazzolaScooter> sovrascriviListaPiazzoleScooter(Scooter scooter, int riga)
 	{
 		List<PiazzolaScooter> list = listaPiazzoleScooter(false);

@@ -4,8 +4,6 @@ public class BizVeicoli
 {
 	public boolean verificaTargaAuto(String targa)
 	{
-		if(targa == null)
-			return true;
 		if(targa.length() != 7)
 			return false;
 		if((int) targa.charAt(0) < 65 || (int) targa.charAt(0) > 90)
@@ -29,8 +27,6 @@ public class BizVeicoli
 	
 	public boolean verificaTargaScooter(String targa)
 	{
-		if(targa == null)
-			return true;
 		if(targa.length() != 7)
 			return false;
 		if((int) targa.charAt(0) < 65 || (int) targa.charAt(0) > 90)
