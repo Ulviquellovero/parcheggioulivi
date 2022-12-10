@@ -13,6 +13,7 @@ public class Main
 	 *    - aggiungi commenti
 	 *    - arrivo auto afittata solo se non presente
 	 *    - no annulla ma torna indietro
+	 *    - entrata auto aft solo se non è già dentro
 	 */
 	
 	public static void main(String[] args) 

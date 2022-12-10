@@ -218,22 +218,26 @@ public class Console
 	
 	private int verificheTarga(String targa, Auto auto)
 	{
-		String  mess = "";
 		if(bizVeicoli.verificaTargaAuto(targa))
-			mess = bizDataBase.cercaTargaAuto(targa);
-		if(mess != "")
 		{
-			if(mess.substring(0, 7).equals("Piano A"))
+			int pos = 0;
+			pos = bizDataBase.cercaTargaPianoAAuto(targa, true);
+			if(pos != 0)
 			{
 				auto.setTarga(targa);
-				bizDataBase.parcheggiaAutoAffittuaria(auto);
+				bizDataBase.parcheggiaAutoAffittuaria(auto, pos);
 				System.out.println("\nOperazione andata a buon fine");
 				return 1;
 			}
 			else
 			{
-				System.out.println("\nQuesta targa appartiene già ad un auto presente nel parcheggio");
-				return 2;
+				String mess = "";
+				mess = bizDataBase.cercaTargaAutoNoAft(targa);
+				if(mess != "")
+				{
+					System.out.println("\nQuesta targa appartiene già ad un auto presente nel parcheggio");
+					return 2;
+				}
 			}
 		}
 		return 0;
@@ -377,7 +381,7 @@ public class Console
 			{
 				if(bizVeicoli.verificaTargaAuto(targa))
 				{
-					String zona = bizDataBase.cercaTargaAuto(targa);
+					String zona = bizDataBase.cercaTargaAutoAft(targa);
 					if(zona != "")
 					{
 						System.out.println("\nAuto con targa corrispondente trovata nella zona --> " + zona);
@@ -439,7 +443,7 @@ public class Console
 		if(tipoVeicolo == 1)
 			checkOutAuto();
 		if(tipoVeicolo == 2)
-			checkOutScooter();
+			checkOutScooterTarga();
 		if(tipoVeicolo == 0)
 			System.out.println("\nOperazione annullata");
 	}
@@ -448,12 +452,62 @@ public class Console
 	
 	private void checkOutAuto()
 	{
-		
+		Auto    auto          = new Auto(null, null);
+		String  targa         = ""; 
+		while(!bizVeicoli.verificaTargaAuto(targa))
+		{
+			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
+					                        + " es.AA999AA", false, null);
+			if(targa != null)
+			{
+				int res = verificheTargaIn(targa, auto);
+				if(res == 1)
+				{
+					return;
+				}
+				else
+				{
+					if(res == 2)
+						targa = "";
+				}
+			}
+			else
+			{
+				System.out.println("\nOperazione anullata");
+				return;
+			}
+		}
+		checkInAutoMotore(auto, targa);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private void checkOutScooter()
+	private int verificheTargaIn(String targa, Auto auto)
+	{
+		String  mess = "";
+		if(bizVeicoli.verificaTargaAuto(targa))
+			mess = bizDataBase.cercaTargaAuto(targa);
+		if(mess != "")
+		{
+			if(mess.substring(0, 7).equals("Piano A"))
+			{
+				auto.setTarga(targa);
+				bizDataBase.uscitaAutoAffittuaria(auto);
+				System.out.println("\nOperazione andata a buon fine");
+				return 1;
+			}
+			else
+			{
+				System.out.println("\nQuesta targa appartiene già ad un auto presente nel parcheggio");
+				return 2;
+			}
+		}
+		return 0;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void checkOutScooterTarga()
 	{
 		Scooter scooter   = new Scooter(null);
 		String  targa     = "";  
@@ -486,10 +540,7 @@ public class Console
 	
 	private void checkOutScooter(Scooter scooter)
 	{
-		boolean result = bizDataBase.uscitaScooter(scooter);
-		if(result)
-			System.out.println("\nOperazione andata a buon fine!");
-		else
-			System.out.println("\nParcheggio pieno!");
+		bizDataBase.uscitaScooter(scooter);
+		System.out.println("\nOperazione andata a buon fine!");
 	}
 }

@@ -31,7 +31,7 @@ public class BizDataBase
 				String[] campi = riga.split(",");
 				if(soloLibere)
 				{
-					if(!campi[1].equals("SI") && !campi[3].equals("SI"))
+					if(!campi[1].equals("SI") && !campi[5].equals("SI"))
 						aggiungiPiazzolaAffittabile(campi, mess);
 				}
 				else
@@ -215,7 +215,7 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public int cercaTargaPianoAAuto(String targa)
+	public int cercaTargaPianoAAuto(String targa, boolean soloAft)
 	{
 		BufferedReader reader = null;
 		String         riga   = "";
@@ -225,8 +225,16 @@ public class BizDataBase
 			while((riga = reader.readLine()) != null) 
 			{
 				String[] campi = riga.split(",");
-				if(campi[2].equals(targa) && campi[1].equals("SI"))
-					return Integer.parseInt(campi[0]);
+				if(soloAft)
+				{
+					if(campi[2].equals(targa) && campi[5].equals("SI"))
+						return Integer.parseInt(campi[0]);
+				}
+				else
+				{
+					if(campi[2].equals(targa) && campi[1].equals("SI"))
+						return Integer.parseInt(campi[0]);
+				}
 			}
 		}
 		catch(Exception e) 
@@ -350,9 +358,59 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public String cercaTargaAuto(String targa)
+	public String cercaTargaAutoNoAft(String targa)
 	{
-		int ris = cercaTargaPianoAAuto(targa);
+		int ris = cercaTargaPianoAAuto(targa, false);
+		if(ris != 0)
+		{
+			if(ris < 10)
+			{
+				return "Piano A numero 00" + ris;
+			}
+			else
+			{
+				if(ris > 10 && ris != 100)
+					return "Piano A numero 0" + ris;
+				else
+					return "Piano A numero " + ris;
+			}
+		}	
+		ris = cercaTargaPianoB(targa);
+		if(ris != 0)
+			return "Piano B numero " + ris;
+		ris = cercaTargaPianoBRicarica(targa);
+		if(ris != 0)
+			return "Piano B con ricarica numero " + ris;
+		ris = cercaTargaPianoC(targa);
+		if(ris != 0)
+			return "Piano C numero " + ris;
+		return "";
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public String cercaTargaAutoAft(String targa)
+	{
+		String res = cercaPianoA(targa);
+		if(res != "")
+			return res;
+		int ris = cercaTargaPianoB(targa);
+		if(ris != 0)
+			return "Piano B numero " + ris;
+		ris = cercaTargaPianoBRicarica(targa);
+		if(ris != 0)
+			return "Piano B con ricarica numero " + ris;
+		ris = cercaTargaPianoC(targa);
+		if(ris != 0)
+			return "Piano C numero " + ris;
+		return "";
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private String cercaPianoA(String targa)
+	{
+		int ris = cercaTargaPianoAAuto(targa, false);
 		if(ris != 0)
 		{
 			if(ris < 10)
@@ -367,16 +425,21 @@ public class BizDataBase
 					return "Piano A numero " + ris;
 			}
 		}
-			
-		ris = cercaTargaPianoB(targa);
+		ris = cercaTargaPianoAAuto(targa, true);
 		if(ris != 0)
-			return "Piano B numero " + ris;
-		ris = cercaTargaPianoBRicarica(targa);
-		if(ris != 0)
-			return "Piano B con ricarica numero " + ris;
-		ris = cercaTargaPianoC(targa);
-		if(ris != 0)
-			return "Piano C numero " + ris;
+		{
+			if(ris < 10)
+			{
+				return "Piano A numero 00" + ris;
+			}
+			else
+			{
+				if(ris > 10 && ris != 100)
+					return "Piano A numero 0" + ris;
+				else
+					return "Piano A numero " + ris;
+			}
+		}
 		return "";
 	}
 	
@@ -396,17 +459,16 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public void parcheggiaAutoAffittuaria(Auto auto)
+	public void parcheggiaAutoAffittuaria(Auto auto, int pos)
 	{
 		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
-		int                           pos  =     cercaTargaPianoAAuto(auto.getTarga());
-		list = sovrascriviListaPiazzoleAffittabili(auto, pos);
+		list = sovrascriviListaPiazzoleAffittabili(auto, pos, 0, 0);
 		sovrascriviFIlePiazzoleAffittabili(list);
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
-	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabili(Auto auto, int riga)
+	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabili(Auto auto, int riga, int ora, int minuto)
 	{
 		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
 		for(PiazzolaAutoAffittabile piazzola : list)
@@ -415,8 +477,33 @@ public class BizDataBase
 			{
 				piazzola.setAuto(auto);
 				piazzola.setOccupato(SiNo.SI);
-				piazzola.setOraEntrata(ZonedDateTime.now().getHour());
-				piazzola.setMinutoEntrata(ZonedDateTime.now().getMinute());
+				piazzola.setOraEntrata(ora);
+				piazzola.setMinutoEntrata(minuto);
+				return list;
+			}
+		}
+		return list;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public void uscitaAutoAffittuaria(Auto auto)
+	{
+		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
+		list = sovrascriviListaPiazzoleAffittabiliCancella(auto);
+		sovrascriviFIlePiazzoleAffittabili(list);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabiliCancella(Auto auto)
+	{
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		for(PiazzolaAutoAffittabile piazzola : list)
+		{
+			if(piazzola.getAuto().getTarga().equals(auto.getTarga()))
+			{
+				piazzola.setOccupato(SiNo.NO);
 				return list;
 			}
 		}
@@ -481,12 +568,11 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean uscitaScooter(Scooter scooter)
+	public void uscitaScooter(Scooter scooter)
 	{
 		List<PiazzolaScooter> list = new ArrayList<PiazzolaScooter>();
 		list = sovrascriviListaPiazzoleScooterCancella(scooter);
 		sovrascriviListaPiazzoleScooter(list);
-		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -557,7 +643,8 @@ public class BizDataBase
 		}
 		else
 		{
-			listAft = sovrascriviListaPiazzoleAffittabili(auto, listAft.get(0).getNumeroParcheggio());
+			listAft = sovrascriviListaPiazzoleAffittabili(auto, listAft.get(0).getNumeroParcheggio()
+					                                          , ZonedDateTime.now().getHour(), ZonedDateTime.now().getMinute());
 			sovrascriviFIlePiazzoleAffittabili(listAft);
 		}
 		return true;
