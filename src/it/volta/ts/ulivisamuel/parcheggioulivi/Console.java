@@ -9,6 +9,7 @@ import it.volta.ts.ulivisamuel.parcheggioulivi.bean.PiazzolaAutoAffittabile;
 import it.volta.ts.ulivisamuel.parcheggioulivi.bean.PiazzolaScooter;
 import it.volta.ts.ulivisamuel.parcheggioulivi.bean.Scooter;
 import it.volta.ts.ulivisamuel.parcheggioulivi.business.BizDataBase;
+import it.volta.ts.ulivisamuel.parcheggioulivi.business.BizRicavi;
 import it.volta.ts.ulivisamuel.parcheggioulivi.business.BizVeicoli;
 import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.Motore;
 import it.volta.ts.ulivisamuel.parcheggioulivi.util.Util;
@@ -18,6 +19,7 @@ public class Console
 	private Scanner     scanner;
 	private BizDataBase bizDataBase;
 	private BizVeicoli  bizVeicoli;
+	private BizRicavi   bizRicavi;
 	
 	//---------------------------------------------------------------------------------------------
 	
@@ -25,6 +27,7 @@ public class Console
 	{
 		bizDataBase = new BizDataBase();
 		bizVeicoli  = new BizVeicoli();
+		bizRicavi   = new BizRicavi();
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -32,7 +35,9 @@ public class Console
 	public void esegui()
 	{
 		scanner = new Scanner(System.in);
+		System.out.println("Benvenuto!");
 		menu();
+		System.out.println("\nArrivederci e buon lavoro!");
 		scanner.close();
 	}
 	
@@ -41,14 +46,15 @@ public class Console
 	private void menu()
 	{
 		String  menu     = "\nInserisci il numero indicato per\n   1.Visualizzare lo stato di tutte le piazzole nel parcheggio"
-						 + "\n   2.Visualizzare solo lo stato delle piazzole non occupate nel parcheggio"
+						 + "\n   2.Visualizzare solo lo stato delle piazzole libere nel parcheggio"
 						 + "\n   3.Visualizzare solo lo stato delle piazzole affittabili nel parcheggio\n   4.Checkin veicolo"
-						 + "\n   5.Cerca targa nel parcheggio\n   6.Checkout veicolo\n   7.Affitta posto\n   0.Uscire dal programma";
+						 + "\n   5.Cerca targa nel parcheggio\n   6.Checkout veicolo\n   7.Affitta posto\n   8.Disaffitta piazzola"
+						 + "\n   9.Ricavi giornaglieri\n   0.Uscire dal programma";
 		int     scelta   = 0;
 		boolean continua = true;
 		while(continua)
 		{
-			scelta = Util.leggiInt(scanner, menu, 0, 7, false, -1);
+			scelta = Util.leggiInt(scanner, menu, 0, 9, false, -1);
 			switch(scelta)
 			{
 			case 1:
@@ -71,6 +77,12 @@ public class Console
 				break;
 			case 7:
 				affittaPosto();
+				break;
+			case 8:
+				disaffittaPosto();
+				break;
+			case 9:
+				ricaviGiornaglieri();
 				break;
 			case -1:
 				break;
@@ -482,7 +494,9 @@ public class Console
 		}
 		auto.setTarga(targa);
 		bizDataBase.uscitaAuto(auto);
-		System.out.println("\nOperazione andata a buon fine");
+		float ricavo = bizRicavi.aggiungiRicavi(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
+																		  , bizDataBase.getBufferPedaggio());
+		System.out.println("\nPedaggio da pagare --> " + ricavo);
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -550,7 +564,9 @@ public class Console
 	private void checkOutScooter(Scooter scooter)
 	{
 		bizDataBase.uscitaScooter(scooter);
-		System.out.println("\nOperazione andata a buon fine!");
+		float ricavo = bizRicavi.aggiungiRicavi(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
+				  , bizDataBase.getBufferPedaggio());
+		System.out.println("\nPedaggio da pagare --> " + ricavo);
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -580,7 +596,9 @@ public class Console
 					else
 					{
 						bizDataBase.affittaPiazzolaEsistente(riga);
-						System.out.println("Operazione andata a buon fine!");
+						float ricavo = bizRicavi.aggiungiRicavi(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
+								  , bizDataBase.getBufferPedaggio());
+						System.out.println("\nPedaggio da pagare --> " + ricavo);
 					}
 				}
 			}
@@ -590,5 +608,48 @@ public class Console
 				return;
 			}
 		}
+	}
+
+	//---------------------------------------------------------------------------------------------
+	
+	private void disaffittaPosto()
+	{
+		Auto    auto  = new Auto(null, null);
+		String  targa = ""; 
+		while(!bizVeicoli.verificaTargaAuto(targa))
+		{
+			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
+                    + " es.AA999AA", false, null);
+			if(targa != null)
+			{
+				if(bizVeicoli.verificaTargaAuto(targa))
+				{
+					int riga = bizDataBase.cercaTargaPianoAAuto(targa, true);
+					auto.setTarga(targa);
+					if(riga == 0)
+					{
+						System.out.println("\nNon esiste alcuna piazzola con questa targa");
+						targa = "";
+					}
+					else
+					{
+						bizDataBase.disaffittaPiazzola(riga);
+						System.out.println("\nOperazione andata a buon fine!");
+					}
+				}
+			}
+			else
+			{
+				System.out.println("\nOperazione anullata");
+				return;
+			}
+		}
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private void ricaviGiornaglieri()
+	{
+		System.out.println("\nRicavi giornaglieri --> " + bizRicavi.getRicaviGiorn());
 	}
 }

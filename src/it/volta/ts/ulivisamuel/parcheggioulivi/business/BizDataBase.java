@@ -18,6 +18,38 @@ import it.volta.ts.ulivisamuel.parcheggioulivi.enumerations.SiNo;
 
 public class BizDataBase
 {
+	private int   bufferOra;
+	private int   bufferMinuto;
+	private float bufferPedaggio;
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public BizDataBase()
+	{
+		bufferOra      = 0;
+		bufferMinuto   = 0;
+		bufferPedaggio = 0;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public int getBufferOra()
+	{
+		return bufferOra;
+	}
+
+	public int getBufferMinuto()
+	{
+		return bufferMinuto;
+	}
+	
+	public float getBufferPedaggio()
+	{
+		return bufferPedaggio;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
 	public List<PiazzolaAutoAffittabile> listaPiazzoleAffittabili(boolean soloLibere)
 	{
 		BufferedReader                reader = null;
@@ -536,6 +568,9 @@ public class BizDataBase
 				if(!afittuaria)
 				{
 					piazzola.setAuto(new Auto("NESSUNA", Motore.NON_ELETTRICO));
+					bufferOra      = piazzola.getOraEntrata();
+					bufferMinuto   = piazzola.getMinutoEntrata();
+					bufferPedaggio = 2;
 					piazzola.setMinutoEntrata(0);
 					piazzola.setOraEntrata(0);
 				}
@@ -622,6 +657,9 @@ public class BizDataBase
 			{
 				piazzola.setScooter(new Scooter("NESSUNA"));
 				piazzola.setOccupato(SiNo.NO);
+				bufferOra      = piazzola.getOraEntrata();
+				bufferMinuto   = piazzola.getMinutoEntrata();
+				bufferPedaggio = 1.5f;
 				piazzola.setOraEntrata(0);
 				piazzola.setMinutoEntrata(0);
 				return list;
@@ -725,6 +763,9 @@ public class BizDataBase
 			{
 				piazzola.setAuto(new Auto("NESSUNA", Motore.NON_ELETTRICO));
 				piazzola.setOccupato(SiNo.NO);
+				bufferOra      = piazzola.getOraEntrata();
+				bufferMinuto   = piazzola.getMinutoEntrata();
+				bufferPedaggio = 2;
 				piazzola.setOraEntrata(0);
 				piazzola.setMinutoEntrata(0);
 				return list;
@@ -817,6 +858,9 @@ public class BizDataBase
 			{
 				piazzola.setAuto(new Auto("NESSUNA", Motore.NON_ELETTRICO));
 				piazzola.setOccupato(SiNo.NO);
+				bufferOra      = piazzola.getOraEntrata();
+				bufferMinuto   = piazzola.getMinutoEntrata();
+				bufferPedaggio = 3;
 				piazzola.setOraEntrata(0);
 				piazzola.setMinutoEntrata(0);
 				return list;
@@ -911,9 +955,48 @@ public class BizDataBase
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
 			{
+				bufferOra      = piazzola.getOraEntrata();
+				bufferMinuto   = piazzola.getMinutoEntrata();
+				bufferPedaggio = 2;
 				piazzola.setMinutoEntrata(0);
 				piazzola.setOraEntrata(0);
 				piazzola.setAffittato(SiNo.SI);
+				return list;
+			}
+		}
+		return list;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	
+	public void disaffittaPiazzola(int riga)
+	{
+		List<PiazzolaAutoAffittabile> list = new ArrayList<PiazzolaAutoAffittabile>();
+		list = sovrascriviListaPiazzoleAffittabileDisaffitta(riga);
+		sovrascriviFIlePiazzoleAffittabili(list);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabileDisaffitta(int riga)
+	{
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		for(PiazzolaAutoAffittabile piazzola : list)
+		{
+			if(piazzola.getNumeroParcheggio() == riga)
+			{
+				if(piazzola.getOccupato() == SiNo.NO)
+				{
+					piazzola.setAuto(new Auto("NESSUNA", Motore.NON_ELETTRICO));
+					piazzola.setMinutoEntrata(0);
+					piazzola.setOraEntrata(0);
+				}
+				else
+				{
+					piazzola.setOraEntrata(ZonedDateTime.now().getHour());
+					piazzola.setMinutoEntrata(ZonedDateTime.now().getMinute());
+				}
+				piazzola.setAffittato(SiNo.NO);
 				return list;
 			}
 		}

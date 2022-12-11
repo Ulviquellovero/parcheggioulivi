@@ -8,11 +8,9 @@ public class Main
 	 */
 	
 	/* Note:
-	 *    - mettere apposto sezioni file
 	 *    - mettere apposto interfaccia
 	 *    - aggiungi commenti
 	 *    - arrivo auto afittata solo se non presente
-	 *    - no annulla ma torna indietro
 	 *    - entrata auto aft solo se non è già dentro
 	 */
 	
