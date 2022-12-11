@@ -31,8 +31,15 @@ public class PiazzolaScooter extends Piazzola
 	@Override
 	public String toString() 
 	{
-		return "PiazzolaScooter [numeroParcheggio=" + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
-		       + ", Targa=" + scooter.getTarga() + ", oraIngresso=" + super.getOraEntrata() + ":" + super.getMinutoEntrata() + "]";
+		String zeriOra    = "";
+		String zeriMinuto = "";
+		if(super.getOraEntrata() < 10)
+			zeriOra = "0";
+		if(super.getMinutoEntrata() < 10)
+			zeriMinuto = "0";
+		return "[Numero piazzola = " + super.getNumeroParcheggio() + ", Piazzola occupata = " + super.getOccupato() 
+		       + ", Targa scooter occupante = " + scooter.getTarga() + ", Ora d'ingresso scooter occupante = " + super.getOraEntrata()
+		       + zeriOra + ":" + zeriMinuto + super.getMinutoEntrata() + "]";
 	}
 	
 	@Override

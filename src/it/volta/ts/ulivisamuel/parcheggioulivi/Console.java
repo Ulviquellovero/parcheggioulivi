@@ -45,11 +45,13 @@ public class Console
 	
 	private void menu()
 	{
-		String  menu     = "\nInserisci il numero indicato per\n   1.Visualizzare lo stato di tutte le piazzole nel parcheggio"
-						 + "\n   2.Visualizzare solo lo stato delle piazzole libere nel parcheggio"
-						 + "\n   3.Visualizzare solo lo stato delle piazzole affittabili nel parcheggio\n   4.Checkin veicolo"
-						 + "\n   5.Cerca targa nel parcheggio\n   6.Checkout veicolo\n   7.Affitta posto\n   8.Disaffitta piazzola"
-						 + "\n   9.Ricavi giornaglieri\n   0.Uscire dal programma";
+		String  menu     = "\nInserisci il numero indicato per\n   1.Eseguire il check-in di un veicolo"
+				         + "\n   2.Visualizzare lo stato di tutte le piazzole nel parcheggio"
+				         + "\n   3.Visualizzare lo stato delle piazzole libere nel parcheggio"
+						 + "\n   4.Visualizzare lo stato delle piazzole affittabili nel parcheggio"
+				         + "\n   5.Cercare la posizione di un veicolo nel parcheggio\n   6.Affittare una piazzola"
+				         + "\n   7.Annullare il contratto di affitto con un auto\n   8.Eseguire il check-out di un veicolo"
+				         + "\n   9.Visualizzare i ricavi della giornata\n   0.Uscire dal programma";
 		int     scelta   = 0;
 		boolean continua = true;
 		while(continua)
@@ -58,28 +60,28 @@ public class Console
 			switch(scelta)
 			{
 			case 1:
-				statoParcheggio();
+				checkInVeicolo();
 				break;
 			case 2:
-				statoParcheggiLiberi();
+				statoParcheggio();
 				break;
 			case 3:
-				statoPianoAAuto(true);
+				statoParcheggiLiberi();
 				break;
 			case 4:
-				checkInVeicolo();
+				statoPianoAAuto(true);
 				break;
 			case 5:
 				cercaVeicolo();
 				break;
 			case 6:
-				checkOutVeicolo();
-				break;
-			case 7:
 				affittaPosto();
 				break;
-			case 8:
+			case 7:
 				disaffittaPosto();
+				break;
+			case 8:
+				checkOutVeicolo();
 				break;
 			case 9:
 				ricaviGiornaglieri();
@@ -184,7 +186,7 @@ public class Console
 	
 	private void checkInVeicolo()
 	{
-		String menuTipoVeicolo = "\nInserisci il numero indicato in base al veicolo arrivato\n   1.Un'auto"
+		String menuTipoVeicolo = "\nInserisci il numero indicato in base al tipo di veicolo da assegnare a una piazzola\n   1.Un'auto"
 				               + "\n   2.Uno scooter\n   0.Per annullare l'operazione";
 		int tipoVeicolo        = -1;
 		while(tipoVeicolo == -1)
@@ -205,8 +207,8 @@ public class Console
 		String  targa         = ""; 
 		while(!bizVeicoli.verificaTargaAuto(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
-					                        + " es.AA999AA", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto da assegnare a una piazzola (es.AA999AA)"
+					                        + " oppure premi INVIO per annullare l'operazione", false, null);
 			if(targa != null)
 			{
 				int res = verificheTarga(targa, auto);
@@ -222,7 +224,7 @@ public class Console
 			}
 			else
 			{
-				System.out.println("\nOperazione anullata");
+				System.out.println("\nOperazione annullata");
 				return;
 			}
 		}
@@ -262,7 +264,7 @@ public class Console
 	
 	private void checkInAutoMotore(Auto auto, String targa)
 	{
-		String menuTipoMotore = "\nInserisci il numero indicato in base al tipo di motore dell'auto arrivata"
+		String menuTipoMotore = "\nInserisci il numero indicato in base al tipo di motore del veicolo da assegnare a una piazzola"
                 + "\n   1.Motore elettrico\n   2.Motore non elettrico\n   0.Per annullare l'operazione";
 		int     motore        = -1;
 		auto.setTarga(targa);
@@ -287,15 +289,16 @@ public class Console
 	private void checkInAutoElettrica(Auto auto)
 	{
 		String menuRicarica = "\nInserisci il numero indicato per\n   1.Ricaricare l'auto\n   2.Parcheggiare l'auto"
-				            + "\n   0.Uscire dal programma";
+				            + "\n   0.Annullare l'operazione";
 		int scelta = -1;
 		while(scelta == -1) 
 			scelta = Util.leggiInt(scanner, menuRicarica, 0, 2, false, -1);
 		if(scelta == 1)
 		{
-			boolean result = bizDataBase.parcheggiaAutoElettrica(auto);
-			if(result)
-				System.out.println("\nOperazione andata a buon fine!");
+			int result = bizDataBase.parcheggiaAutoElettrica(auto);
+			if(result != 0)
+				System.out.println("\nOperazione andata a buon fine, all'auto è stata assegnata la piazzola nella zona "
+						         + "--> Piano B parcheggi con ricarica, piazzola numero: " + result);
 			else
 				System.out.println("\nParcheggio pieno!");
 		}
@@ -310,13 +313,15 @@ public class Console
 	
 	//---------------------------------------------------------------------------------------------
 	
+	//---------------------------------------------------------------------------------------------
+	
 	private void checkInAutoTermica(Auto auto)
 	{
-		boolean result = bizDataBase.parcheggiaAutoOrdinaria(auto);
-		if(result)
-			System.out.println("\nOperazione andata a buon fine!");
+		String result = bizDataBase.parcheggiaAutoOrdinaria(auto);
+		if(result != "")
+			System.out.println("\nOperazione andata a buon fine, all'auto è stata assegnata la piazzola nella zona --> " + result);
 		else
-			System.out.println("\nParcheggio pieno!");
+			System.out.println("\nNon ci sono piazzole ordinarie libere!");
 	}
 		
 	//---------------------------------------------------------------------------------------------
@@ -327,15 +332,15 @@ public class Console
 		String  targa     = "";  
 		while(!bizVeicoli.verificaTargaScooter(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dello scooter arrivato oppure invio per annullare l'operazione"
-					                        + " es.AA99999", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dello scooter da assegnare a una piazzola (es.AA99999)"
+					                        + " oppure premi INVIO per annullare l'operazione", false, null);
 			if(targa != null)
 			{
 				if(bizVeicoli.verificaTargaScooter(targa))
 				{
 					if(bizDataBase.cercaTargaPianoAScooter(targa) != 0)
 					{
-						System.out.println("\nQuesta targa appartiene già  ad uno scooter presente nel parcheggio");
+						System.out.println("\nQuesta targa appartiene già ad uno scooter presente nel parcheggio");
 						targa = "";
 					}
 				}
@@ -354,18 +359,19 @@ public class Console
 	
 	private void checkInScooter(Scooter scooter)
 	{
-		boolean result = bizDataBase.parcheggiaScooter(scooter);
-		if(result)
-			System.out.println("\nOperazione andata a buon fine!");
+		int result = bizDataBase.parcheggiaScooter(scooter);
+		if(result != 0)
+			System.out.println("\nOperazione andata a buon fine, allo scooter è stata assegnata la piazzola nella zona "
+				             + "--> Piano A parcheggi scooter, piazzola numero: " + result);
 		else
-			System.out.println("\nParcheggio pieno!");
+			System.out.println("\nParcheggio scooter pieno!");
 	}
 	
 	//---------------------------------------------------------------------------------------------
 	
 	private void cercaVeicolo()
 	{
-		String menuTipoVeicolo = "\nInserisci il numero indicato in base al veicolo arrivato\n   1.Un'auto"
+		String menuTipoVeicolo = "\nInserisci il numero indicato in base al tipo di veicolo da ricercare\n   1.Un'auto"
 	               + "\n   2.Uno scooter\n   0.Per annullare l'operazione";
 		int tipoVeicolo        = -1;
 		while(tipoVeicolo == -1)

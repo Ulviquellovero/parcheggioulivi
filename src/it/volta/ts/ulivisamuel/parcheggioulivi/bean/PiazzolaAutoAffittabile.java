@@ -31,8 +31,9 @@ public class PiazzolaAutoAffittabile extends PiazzolaAuto
 	@Override
 	public String toString() 
 	{
-		String zeri = "";
-		
+		String zeriOra    = "";
+		String zeriMinuto = "";
+		String zeri       = "";
 		if(super.getNumeroParcheggio() != 100)
 		{
 			if(super.getNumeroParcheggio() > 9)
@@ -40,10 +41,13 @@ public class PiazzolaAutoAffittabile extends PiazzolaAuto
 			else
 				zeri = "00";
 		}
-		
-		return "PiazzolaAutoAffittabile [numeroParcheggio=" + zeri + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
-		     + ", Targa=" + super.getAuto().getTarga() + ", oraIngresso=" + super.getOraEntrata() + ":" + super.getMinutoEntrata() 
-		     + ", affittato=" + affittato + "]";
+		if(super.getOraEntrata() < 10)
+			zeriOra = "0";
+		if(super.getMinutoEntrata() < 10)
+			zeriMinuto = "0";
+		return "[Numero piazzola = " + zeri + super.getNumeroParcheggio() + ", Piazzola occupata = " + super.getOccupato() 
+		     + ", Targa auto occupante = " + super.getAuto().getTarga() + ", Ora d'ingresso auto occupante = " + zeriOra 
+		     + super.getOraEntrata() + ":" + zeriMinuto + super.getMinutoEntrata() + ", Piazzola affittata = " + affittato + "]";
 	}
 	
 	//---------------------------------------------------------------------------------------------

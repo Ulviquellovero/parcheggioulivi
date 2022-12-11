@@ -12,6 +12,7 @@ public class Main
 	 *    - aggiungi commenti
 	 *    - arrivo auto afittata solo se non presente
 	 *    - entrata auto aft solo se non è già dentro
+	 *    - 100€ affittati
 	 */
 	
 	public static void main(String[] args) 

@@ -30,8 +30,15 @@ public class PiazzolaAuto extends Piazzola
 	@Override
 	public String toString() 
 	{
-		return "PiazzolaAuto [numeroParcheggio=" + super.getNumeroParcheggio() + ", occupato=" + super.getOccupato() 
-		     + ", Targa=" + auto.getTarga() + ", oraIngresso=" + super.getOraEntrata() + ":" + super.getMinutoEntrata() + "]";
+		String zeriOra    = "";
+		String zeriMinuto = "";
+		if(super.getOraEntrata() < 10)
+			zeriOra = "0";
+		if(super.getMinutoEntrata() < 10)
+			zeriMinuto = "0";
+		return "[Numero piazzola = " + super.getNumeroParcheggio() + ", Piazzola occupata = " + super.getOccupato() 
+		     + ", Targa auto occupante = " + auto.getTarga() + ", Ora d'ingresso auto occupante = " + zeriOra 
+			 + super.getOraEntrata() + ":" + zeriMinuto + super.getMinutoEntrata() + "]";
 	}
 	
 	//---------------------------------------------------------------------------------------------

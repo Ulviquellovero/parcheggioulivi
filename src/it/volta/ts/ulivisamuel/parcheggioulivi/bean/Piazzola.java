@@ -68,8 +68,8 @@ public abstract class Piazzola
 	@Override
 	public String toString() 
 	{
-		return "Piazzola [numeroParcheggio=" + numeroParcheggio + ", occupato=" + occupato + ", oraIngresso=" + oraEntrata
-			 + ":" + minutoEntrata + "]";
+		return "[Numero piazzola = " + numeroParcheggio + ", Piazzola occupata = " + occupato 
+		     + ", Ora d'ingresso veicolo occupante = " + oraEntrata + ":" + minutoEntrata + "]";
 	}
 	
 	//---------------------------------------------------------------------------------------------

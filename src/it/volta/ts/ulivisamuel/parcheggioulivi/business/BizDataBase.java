@@ -428,13 +428,13 @@ public class BizDataBase
 			return res;
 		int ris = cercaTargaPianoB(targa);
 		if(ris != 0)
-			return "Piano B numero " + ris;
+			return "Piano B piazzola numero: " + ris;
 		ris = cercaTargaPianoBRicarica(targa);
 		if(ris != 0)
-			return "Piano B con ricarica numero " + ris;
+			return "Piano B con ricarica piazzola numero: " + ris;
 		ris = cercaTargaPianoC(targa);
 		if(ris != 0)
-			return "Piano C numero " + ris;
+			return "Piano C piazzola numero: " + ris;
 		return "";
 	}
 	
@@ -447,14 +447,14 @@ public class BizDataBase
 		{
 			if(ris < 10)
 			{
-				return "Piano A numero 00" + ris;
+				return "Piano A piazzola numero: 00" + ris;
 			}
 			else
 			{
 				if(ris > 10 && ris != 100)
-					return "Piano A numero 0" + ris;
+					return "Piano A piazzola numero: 0" + ris;
 				else
-					return "Piano A numero " + ris;
+					return "Piano A piazzola numero: " + ris;
 			}
 		}
 		ris = cercaTargaPianoAAuto(targa, true);
@@ -462,14 +462,14 @@ public class BizDataBase
 		{
 			if(ris < 10)
 			{
-				return "Piano A numero 00" + ris;
+				return "Piano A piazzola numero: 00" + ris;
 			}
 			else
 			{
 				if(ris > 10 && ris != 100)
-					return "Piano A numero 0" + ris;
+					return "Piano A piazzola numero: 0" + ris;
 				else
-					return "Piano A numero " + ris;
+					return "Piano A piazzola numero: " + ris;
 			}
 		}
 		return "";
@@ -608,14 +608,15 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean parcheggiaScooter(Scooter scooter)
+	public int parcheggiaScooter(Scooter scooter)
 	{
 		List<PiazzolaScooter> list = listaPiazzoleScooter(true);
 		if(list.size() == 0)
-			return false;
+			return 0;
+		int mem = list.get(0).getNumeroParcheggio();
 		list = sovrascriviListaPiazzoleScooter(scooter, list.get(0).getNumeroParcheggio());
 		sovrascriviListaPiazzoleScooter(list);
-		return true;
+		return mem;
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -695,8 +696,9 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean parcheggiaAutoOrdinaria(Auto auto)
+	public String parcheggiaAutoOrdinaria(Auto auto)
 	{
+		int mem;
 		List<PiazzolaAutoAffittabile> listAft = listaPiazzoleAffittabili(true);
 		if(listAft.size() == 0)
 		{
@@ -705,23 +707,31 @@ public class BizDataBase
 			{
 				list = listaPiazzoleOrdinarie(false, true);
 				if(list.size() == 0)
-					return false;
+					return "";
+				mem = list.get(0).getNumeroParcheggio();
 				list = sovrascriviListaPiazzoleOrd(auto, list.get(0).getNumeroParcheggio(), false);
 				sovrascriviFilePiazzoleOrd(false, list);
+				return "Piano C piazzola numero: " + mem;
 			}
 			else
 			{
+				mem = list.get(0).getNumeroParcheggio();
 				list = sovrascriviListaPiazzoleOrd(auto, list.get(0).getNumeroParcheggio(), true);
 				sovrascriviFilePiazzoleOrd(true, list);
+				return "Piano B piazzola numero: " + mem;
 			}
 		}
 		else
 		{
+			mem = listAft.get(0).getNumeroParcheggio();
 			listAft = sovrascriviListaPiazzoleAffittabili(auto, listAft.get(0).getNumeroParcheggio()
 					                                          , ZonedDateTime.now().getHour(), ZonedDateTime.now().getMinute());
 			sovrascriviFIlePiazzoleAffittabili(listAft);
+			if(listAft.get(0).getNumeroParcheggio() != 100)
+				return listAft.get(0).getNumeroParcheggio() > 10 ? "Piano A piazzola numero: " + mem : "Piano A piazzola numero: 00" + mem;
+			else
+				return "Piano A piazzola numero: " + listAft.get(0).getNumeroParcheggio();
 		}
-		return true;
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -809,14 +819,15 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public boolean parcheggiaAutoElettrica(Auto auto)
+	public int parcheggiaAutoElettrica(Auto auto)
 	{
 		List<PiazzolaAuto> list = listaPiazzoleRicarica(true);
 		if(list.size() == 0)
-			return false;
+			return 0;
+		int mem = list.get(0).getNumeroParcheggio();
 		list = sovrascriviListaPiazzoleRicarica(auto, list.get(0).getNumeroParcheggio());
 		sovrascriviFilePiazzoleRicarica(list);
-		return true;
+		return mem;
 	}
 	
 	//---------------------------------------------------------------------------------------------
