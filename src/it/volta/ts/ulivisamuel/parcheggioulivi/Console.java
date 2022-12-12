@@ -123,7 +123,7 @@ public class Console
 	{
 		System.out.println(soloLibere ? "\nPiano A - Piazzole affittabili libere per auto\n" 
 						              : "\nPiano A - Piazzole affittabili per auto\n");
-		List<PiazzolaAutoAffittabile> mess = bizDataBase.listaPiazzoleAffittabili(soloLibere);
+		List<PiazzolaAutoAffittabile> mess = bizDataBase.listaPiazzoleAffittabili(soloLibere, false);
 		for(PiazzolaAutoAffittabile piazzola : mess)
 			System.out.println(piazzola);
 		if(mess.size() == 0)
@@ -313,8 +313,6 @@ public class Console
 	
 	//---------------------------------------------------------------------------------------------
 	
-	//---------------------------------------------------------------------------------------------
-	
 	private void checkInAutoTermica(Auto auto)
 	{
 		String result = bizDataBase.parcheggiaAutoOrdinaria(auto);
@@ -391,8 +389,8 @@ public class Console
 		String targa = "";
 		while(!bizVeicoli.verificaTargaAuto(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto oppure invio per annullare l'operazione"
-											+ " es.AA999AA", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto da ricercare (es.AA999AA) oppure premi"
+											+ "  INVIO per annullare l'operazione", false, null);
 			if(targa == null)
 			{
 				System.out.println("\nOperazione annullata");
@@ -425,8 +423,8 @@ public class Console
 		String targa = "";
 		while(!bizVeicoli.verificaTargaScooter(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dello scooter arrivato oppure invio per annullare l'operazione"
-											+ " es.AA99999", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dello scooter da ricercare (es.AA99999) oppure premi"
+											+ " INVIO per annullare l'operazione", false, null);
 			if(targa == null)
 			{
 				System.out.println("\nOperazione annullata");
@@ -456,7 +454,7 @@ public class Console
 	
 	private void checkOutVeicolo()
 	{
-		String menuTipoVeicolo = "\nInserisci il numero indicato in base al veicolo da far uscire\n   1.Un'auto"
+		String menuTipoVeicolo = "\nInserisci il numero indicato in base al veicolo da far uscire dal parcheggio\n   1.Un'auto"
 	               + "\n   2.Uno scooter\n   0.Per annullare l'operazione";
 		int tipoVeicolo        = -1;
 		while(tipoVeicolo == -1)
@@ -477,8 +475,8 @@ public class Console
 		String  targa         = ""; 
 		while(!bizVeicoli.verificaTargaAuto(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
-					                        + " es.AA999AA", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto da far uscire dal parcheggio (es.AA999AA)"
+					                        + " oppure premi INVIO per annullare l'operazione", false, null);
 			if(targa != null)
 			{
 				int res = verificheTargaOut(targa, auto);
@@ -494,15 +492,15 @@ public class Console
 			}
 			else
 			{
-				System.out.println("\nOperazione anullata");
+				System.out.println("\nOperazione annullata");
 				return;
 			}
 		}
 		auto.setTarga(targa);
 		bizDataBase.uscitaAuto(auto);
-		float ricavo = bizRicavi.aggiungiRicavi(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
+		float ricavo = bizRicavi.aggiungiRicaviNorm(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
 																		  , bizDataBase.getBufferPedaggio());
-		System.out.println("\nPedaggio da pagare --> " + ricavo);
+		System.out.println("\nOperazione andata a buon fine! Il cliente deve pagare un pedaggio di --> " + ricavo + "€");
 	}
 	
 	//---------------------------------------------------------------------------------------------
@@ -526,7 +524,7 @@ public class Console
 				mess = bizDataBase.cercaTargaAutoNoAft(targa);
 				if(mess == "")
 				{
-					System.out.println("\nQuesta targa non appartiene ad un auto presente nel parcheggio");
+					System.out.println("\nQuesta targa non appartiene a nessuna auto presente nel parcheggio");
 					return 2;
 				}
 			}
@@ -542,8 +540,8 @@ public class Console
 		String  targa     = "";  
 		while(!bizVeicoli.verificaTargaScooter(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dello scooter arrivato oppure invio per annullare l'operazione"
-					                        + " es.AA99999", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dello scooter da far uscire dal parcheggio (es.AA99999) oppure premi"
+					                        + " INVIO per annullare l'operazione", false, null);
 			if(targa != null)
 			{
 				if(bizVeicoli.verificaTargaScooter(targa))
@@ -570,9 +568,9 @@ public class Console
 	private void checkOutScooter(Scooter scooter)
 	{
 		bizDataBase.uscitaScooter(scooter);
-		float ricavo = bizRicavi.aggiungiRicavi(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
+		float ricavo = bizRicavi.aggiungiRicaviNorm(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
 				  , bizDataBase.getBufferPedaggio());
-		System.out.println("\nPedaggio da pagare --> " + ricavo);
+		System.out.println("\nOperazione andata a buon fine! Il cliente deve pagare un pedaggio di --> " + ricavo + "€");
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -583,8 +581,8 @@ public class Console
 		String  targa = ""; 
 		while(!bizVeicoli.verificaTargaAuto(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
-                    + " es.AA999AA", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto a cui verrà assegnata una piazzola affittabile"
+                                            + " (es.AA999AA) oppure premi INVIO per annullare l'operazione", false, null);
 			if(targa != null)
 			{
 				if(bizVeicoli.verificaTargaAuto(targa))
@@ -593,24 +591,32 @@ public class Console
 					auto.setTarga(targa);
 					if(riga == 0)
 					{
-						boolean ris = bizDataBase.affittaPiazzola(auto);
-						if(ris)
-							System.out.println("Operazione andata a buon fine!");
+						if(bizDataBase.cercaTargaAutoNoAft(targa) == "")
+						{
+							boolean ris = bizDataBase.affittaPiazzola(auto);
+							if(ris)
+								System.out.println("\nOperazione andata a buon fine");
+							else
+								System.out.println("\nNon c'è nessuna piazzola affittabile libera!");
+						}
 						else
-							System.out.println("Parcheggio pieno");
+						{
+							System.out.println("\nQuesta targa appartiene già ad un auto presente nel parcheggio");
+							targa = "";
+						}
 					}
 					else
 					{
 						bizDataBase.affittaPiazzolaEsistente(riga);
-						float ricavo = bizRicavi.aggiungiRicavi(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
+						float ricavo = bizRicavi.aggiungiRicaviNorm(bizDataBase.getBufferOra(), bizDataBase.getBufferMinuto()
 								  , bizDataBase.getBufferPedaggio());
-						System.out.println("\nPedaggio da pagare --> " + ricavo);
+						System.out.println("\nPiazzola affittata! Pedaggio da pagare per le ore passate fino ad ora --> " + ricavo + "€");
 					}
 				}
 			}
 			else
 			{
-				System.out.println("\nOperazione anullata");
+				System.out.println("\nOperazione annullata");
 				return;
 			}
 		}
@@ -624,8 +630,8 @@ public class Console
 		String  targa = ""; 
 		while(!bizVeicoli.verificaTargaAuto(targa))
 		{
-			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto arrivata oppure invio per annullare l'operazione"
-                    + " es.AA999AA", false, null);
+			targa = Util.leggiString(scanner, "\nInserisci la targa dell'auto a cui verrà disdetto l'affitto"
+                    + " di una piazzola (es.AA999AA) oppure premi INVIO per annullare l'operazione", false, null);
 			if(targa != null)
 			{
 				if(bizVeicoli.verificaTargaAuto(targa))
@@ -634,13 +640,13 @@ public class Console
 					auto.setTarga(targa);
 					if(riga == 0)
 					{
-						System.out.println("\nNon esiste alcuna piazzola con questa targa");
+						System.out.println("\nNessuna piazzola ha un affitto associato a questa targa");
 						targa = "";
 					}
 					else
 					{
 						bizDataBase.disaffittaPiazzola(riga);
-						System.out.println("\nOperazione andata a buon fine!");
+						System.out.println("\nOperazione andata a buon fine");
 					}
 				}
 			}
@@ -656,6 +662,8 @@ public class Console
 	
 	private void ricaviGiornaglieri()
 	{
-		System.out.println("\nRicavi giornaglieri --> " + bizRicavi.getRicaviGiorn());
+		bizRicavi.aggiungiRicaviAft(bizDataBase.listaPiazzoleAffittabili(false, true).size());
+		System.out.println("\nRicavi giornaglieri --> " + bizRicavi.getRicaviGiorn() + "€");
+		bizRicavi.rimuoviRicaviAft(bizDataBase.listaPiazzoleAffittabili(false, true).size());
 	}
 }

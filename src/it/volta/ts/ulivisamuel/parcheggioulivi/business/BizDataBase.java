@@ -50,7 +50,7 @@ public class BizDataBase
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public List<PiazzolaAutoAffittabile> listaPiazzoleAffittabili(boolean soloLibere)
+	public List<PiazzolaAutoAffittabile> listaPiazzoleAffittabili(boolean soloLibere, boolean soloAfitt)
 	{
 		BufferedReader                reader = null;
 		String                        riga   = "";
@@ -68,7 +68,15 @@ public class BizDataBase
 				}
 				else
 				{
-					aggiungiPiazzolaAffittabile(campi, mess);
+					if(soloAfitt)
+					{
+						if(campi[5].equals("SI"))
+							aggiungiPiazzolaAffittabile(campi, mess);
+					}
+					else
+					{
+						aggiungiPiazzolaAffittabile(campi, mess);
+					}
 				}
 			}
 		}
@@ -532,7 +540,7 @@ public class BizDataBase
 	
 	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabili(Auto auto, int riga, int ora, int minuto)
 	{
-		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false, false);
 		for(PiazzolaAutoAffittabile piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
@@ -560,7 +568,7 @@ public class BizDataBase
 	
 	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabiliCancella(Auto auto, boolean afittuaria)
 	{
-		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false, false);
 		for(PiazzolaAutoAffittabile piazzola : list)
 		{
 			if(piazzola.getAuto().getTarga().equals(auto.getTarga()))
@@ -699,7 +707,7 @@ public class BizDataBase
 	public String parcheggiaAutoOrdinaria(Auto auto)
 	{
 		int mem;
-		List<PiazzolaAutoAffittabile> listAft = listaPiazzoleAffittabili(true);
+		List<PiazzolaAutoAffittabile> listAft = listaPiazzoleAffittabili(true, false);
 		if(listAft.size() == 0)
 		{
 			List<PiazzolaAuto> list = listaPiazzoleOrdinarie(true, true);
@@ -923,7 +931,7 @@ public class BizDataBase
 	
 	public boolean affittaPiazzola(Auto auto)
 	{
-		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(true);
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(true, false);
 		if(list.size() == 0)
 			return false;
 		list = sovrascriviListaPiazzoleAffittabileAffitta(auto, list.get(0).getNumeroParcheggio());
@@ -935,7 +943,7 @@ public class BizDataBase
 	
 	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabileAffitta(Auto auto, int riga)
 	{
-		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false, false);
 		for(PiazzolaAutoAffittabile piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
@@ -961,7 +969,7 @@ public class BizDataBase
 	
 	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabileAffittaEs(int riga)
 	{
-		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false, false);
 		for(PiazzolaAutoAffittabile piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)
@@ -991,7 +999,7 @@ public class BizDataBase
 	
 	private List<PiazzolaAutoAffittabile> sovrascriviListaPiazzoleAffittabileDisaffitta(int riga)
 	{
-		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false);
+		List<PiazzolaAutoAffittabile> list = listaPiazzoleAffittabili(false, false);
 		for(PiazzolaAutoAffittabile piazzola : list)
 		{
 			if(piazzola.getNumeroParcheggio() == riga)

@@ -22,11 +22,11 @@ public class BizRicavi
 	
 	//---------------------------------------------------------------------------------------------
 	
-	public float aggiungiRicavi(int ora, int minuto, float pedaggioSing)
+	public float aggiungiRicaviNorm(int ora, int minuto, float pedaggioSing)
 	{
 		ora            = calcolaOre(ora, minuto);
 		float pedaggio = ora * pedaggioSing;
-		ricaviGiorn = ricaviGiorn + pedaggio;
+		ricaviGiorn    = ricaviGiorn + pedaggio;
 		return pedaggio;
 	}
 	
@@ -39,5 +39,19 @@ public class BizRicavi
 		if(minuto != 0)
 			ora = ora + 1;
 		return ora;
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public void aggiungiRicaviAft(float nAffittati)
+	{
+		ricaviGiorn = ricaviGiorn + (100 * nAffittati);
+	}
+	
+	//---------------------------------------------------------------------------------------------
+	
+	public void rimuoviRicaviAft(float nAffittati)
+	{
+		ricaviGiorn = ricaviGiorn - (100 * nAffittati);
 	}
 }
